@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -21,7 +22,8 @@ public class SwerveModule {
     private CANSparkMax angle_motor;
     private SparkMaxPIDController angle_controller;
     private SparkMaxPIDController drive_controller;
-    private CANcoder angle_encoder;
+    private CANcoder angle_encoder; //this will be used as more of an accurate measurement compared to the built in Encoder
+    private RelativeEncoder integrated_angle_encoder; //this will be used to actually adjust the position
     private int moduleNumber;
     private double velocity;
     //private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(null,null , null);  //used to calculate speeds with desire velocity and acceleration
@@ -31,6 +33,7 @@ public class SwerveModule {
         drive_motor = new CANSparkMax(port_motor, t);
         angle_motor = new CANSparkMax(port_angle, t);
         angle_encoder = new CANcoder(port_encoder);
+        integrated_angle_encoder = angle_motor.getEncoder();
 
         //creates PID controllers
         angle_controller = angle_motor.getPIDController();
@@ -51,9 +54,18 @@ public class SwerveModule {
         drive_controller.setFF(0.0);
 
     }
+
+    public void configureEncoders(){
+        integrated_angle_encoder.setPositionConversionFactor(Constants.SwerveConstants.angleConversionFactor);
+    }
     
+    //as of right now, i am writing under the assumption that we will be using the CANCoders instead of the NEO's built in ones
     public void setDesiredState(SwerveModuleState state){
         setSpeed(state);
+    }
+
+    public void resetToAbsolute(){ //resets the module's wheel to 0 degrees
+       integrated_angle_encoder.setPosition(0 - getRotations().getRotations());
     }
 
     public void setSpeed(SwerveModuleState state){
@@ -66,6 +78,15 @@ public class SwerveModule {
         Rotation2d angle = state.angle;
         angle_controller.setReference(angle.getDegrees(), ControlType.kPosition); //we're moving based off angular position, hence the control type
      } 
+
+     public Rotation2d getRotations(){
+        return Rotation2d.fromRotations(angle_encoder.getAbsolutePosition().getValue());
+     }
+
+     public Rotation2d getDegrees(){
+        double angle = 360 * getRotations().getRotations();
+        return Rotation2d.fromDegrees(angle);
+     }
 
     public int getModuleNumber(){
         return moduleNumber;
