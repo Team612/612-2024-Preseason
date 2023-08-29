@@ -134,6 +134,7 @@ public final class Constants {
     public final double[] fr_distance = {0.0,0.0};
     public final double[] bl_distance = {0.0,0.0};
     public final double[] br_distance = {0.0,0.0};
+    public static final double angleConversionFactor = 360.0/(8.4/1.0); //8.4
 
   }
   public static class OperatorConstants {
