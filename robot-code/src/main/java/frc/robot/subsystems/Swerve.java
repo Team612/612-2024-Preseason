@@ -33,10 +33,10 @@ public class Swerve extends SubsystemBase {
     swerve_kinemtics = new SwerveDriveKinematics(this.fl,this.fr,this.bl,this.br);
 
     //SwerveModule initalization
-    SwerveModules[0] = new SwerveModule(0, Constants.DrivetrainConstants.SPARK_FL, Constants.DrivetrainConstants.SPARK_ANGLE_FL, Constants.DrivetrainConstants.ENCODER_ANGLE_FL,MotorType.kBrushless); //fl
-    SwerveModules[1] = new SwerveModule(1, Constants.DrivetrainConstants.SPARK_FR, Constants.DrivetrainConstants.SPARK_ANGLE_FR,Constants.DrivetrainConstants.ENCODER_ANGLE_FR, MotorType.kBrushless); //fr
-    SwerveModules[2] = new SwerveModule(2, Constants.DrivetrainConstants.SPARK_BL, Constants.DrivetrainConstants.SPARK_ANGLE_BL,Constants.DrivetrainConstants.ENCODER_ANGLE_BL, MotorType.kBrushless); //bl
-    SwerveModules[3] = new SwerveModule(3, Constants.DrivetrainConstants.SPARK_BR, Constants.DrivetrainConstants.SPARK_ANGLE_BR,Constants.DrivetrainConstants.ENCODER_ANGLE_BR,  MotorType.kBrushless); //br
+    SwerveModules[0] = new SwerveModule(1, Constants.DrivetrainConstants.SPARK_FL, Constants.DrivetrainConstants.SPARK_ANGLE_FL, Constants.DrivetrainConstants.ENCODER_ANGLE_FL,MotorType.kBrushless); //fl
+    SwerveModules[1] = new SwerveModule(2, Constants.DrivetrainConstants.SPARK_FR, Constants.DrivetrainConstants.SPARK_ANGLE_FR,Constants.DrivetrainConstants.ENCODER_ANGLE_FR, MotorType.kBrushless); //fr
+    SwerveModules[2] = new SwerveModule(3, Constants.DrivetrainConstants.SPARK_BL, Constants.DrivetrainConstants.SPARK_ANGLE_BL,Constants.DrivetrainConstants.ENCODER_ANGLE_BL, MotorType.kBrushless); //bl
+    SwerveModules[3] = new SwerveModule(4, Constants.DrivetrainConstants.SPARK_BR, Constants.DrivetrainConstants.SPARK_ANGLE_BR,Constants.DrivetrainConstants.ENCODER_ANGLE_BR,  MotorType.kBrushless); //br
 
   }
 
@@ -46,7 +46,7 @@ public class Swerve extends SubsystemBase {
     SwerveModuleState[] moduleStates = swerve_kinemtics.toSwerveModuleStates(speed);
 
     for (SwerveModule mod : SwerveModules){
-      mod.setDesiredState(moduleStates[mod.getModuleNumber()]);
+      mod.setDesiredState(moduleStates[mod.getModuleNumber()], true);
     }
     //swerve_kinemtics.desaturateWheelSpeeds(moduleStates, speed, x, x, y);
   

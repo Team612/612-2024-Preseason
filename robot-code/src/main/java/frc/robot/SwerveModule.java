@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 /** Add your docs here. */
 
@@ -24,12 +25,12 @@ public class SwerveModule {
     private SparkMaxPIDController drive_controller;
     private CANcoder angle_encoder; //this will be used as more of an accurate measurement compared to the built in Encoder
     private RelativeEncoder integrated_angle_encoder; //this will be used to actually adjust the position
-    private int moduleNumber;
     private double velocity;
+    private int moduleNumber;
     //private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(null,null , null);  //used to calculate speeds with desire velocity and acceleration
-
-    public SwerveModule(int mn, int port_motor,int port_angle, int port_encoder, MotorType t){
-        moduleNumber = mn;
+    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0, 0); //THESE VALUES NEED TO BE CALCULATED!
+    public SwerveModule(int n, int port_motor,int port_angle, int port_encoder, MotorType t){
+        moduleNumber = n;
         drive_motor = new CANSparkMax(port_motor, t);
         angle_motor = new CANSparkMax(port_angle, t);
         angle_encoder = new CANcoder(port_encoder);
@@ -57,20 +58,29 @@ public class SwerveModule {
 
     public void configureEncoders(){
         integrated_angle_encoder.setPositionConversionFactor(Constants.SwerveConstants.angleConversionFactor);
+        drive_motor.getEncoder().setPositionConversionFactor(Constants.SwerveConstants.distancePerPulse);
     }
+
+
     
     //as of right now, i am writing under the assumption that we will be using the CANCoders instead of the NEO's built in ones
-    public void setDesiredState(SwerveModuleState state){
-        setSpeed(state);
+    public void setDesiredState(SwerveModuleState state, boolean loop){
+        setSpeed(state, loop);
     }
 
     public void resetToAbsolute(){ //resets the module's wheel to 0 degrees
        integrated_angle_encoder.setPosition(0 - getRotations().getRotations());
     }
 
-    public void setSpeed(SwerveModuleState state){
+    public void setSpeed(SwerveModuleState state, boolean isOpenLoop){
+        if (isOpenLoop){ //if we are recieving continous input from the driver/controller. Anything that is not specific
         velocity = state.speedMetersPerSecond / Constants.SwerveConstants.SwerveMaxSpeed;
-        drive_motor.set(velocity); //.set is a percentage of speed, from -1 to 1
+        drive_motor.set(velocity);
+        }
+        else {
+            drive_controller.setReference(state.speedMetersPerSecond,ControlType.kVelocity); //find the circumfrance of the wheel, then divide it by rotations (8.14) to get distancePerPulse
+
+        } //.set is a percentage of speed, from -1 to 1
         //write pid stuff for this later
     }
 
