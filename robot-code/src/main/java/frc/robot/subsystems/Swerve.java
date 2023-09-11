@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
@@ -33,6 +34,7 @@ public class Swerve extends SubsystemBase {
   private SwerveDriveKinematics swerve_kinemtics;
   private SwerveDrivePoseEstimator poseEstimator;
   private SwerveModulePosition[] swerve_position;
+  private SwerveDriveOdometry m_odometry;
   AHRS navx = new AHRS(I2C.Port.kMXP); //gyro
   /** Creates a new Swerve. */
 
@@ -54,6 +56,7 @@ public class Swerve extends SubsystemBase {
 
     swerve_position = new SwerveModulePosition[]{SwerveModules[0].getPositionObject(),SwerveModules[1].getPositionObject(),SwerveModules[2].getPositionObject(),SwerveModules[3].getPositionObject()};
     poseEstimator = new SwerveDrivePoseEstimator(swerve_kinemtics, getNavxAngle(),swerve_position , new Pose2d(0, 0, getNavxAngle()));
+    m_odometry = new SwerveDriveOdometry(swerve_kinemtics, getNavxAngle(), swerve_position);
   }
 
 
@@ -78,6 +81,10 @@ public class Swerve extends SubsystemBase {
     return poseEstimator.getEstimatedPosition();
   }
 
+  public Pose2d getOdometryRobotPosition(){
+    return m_odometry.getPoseMeters();
+  }
+
   public static Swerve getInstance(){
     if (instance == null){
       Constants.SwerveConstants sc = new Constants.SwerveConstants();
@@ -91,6 +98,6 @@ public class Swerve extends SubsystemBase {
   }
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    m_odometry.update(getNavxAngle(), new SwerveModulePosition[] {SwerveModules[0].getPositionObject(),SwerveModules[1].getPositionObject(),SwerveModules[2].getPositionObject(),SwerveModules[3].getPositionObject()});
   }
 }
