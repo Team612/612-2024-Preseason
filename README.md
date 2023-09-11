@@ -1,5 +1,5 @@
-# 612-Template
-Captains: use this to start new projects and update to your necessities.
+# 612-2024-Preseason
+612's 2024 Preseaon repository
 
 # Branches
 - main branch along with its feature branches are protected. **Note:** must make branch protection rules for each feature branch, meaning experimental branches get made and protected before actual code gets pushed
