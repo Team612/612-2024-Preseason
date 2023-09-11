@@ -134,8 +134,8 @@ public final class Constants {
     public final double[] fr_distance = {0.0,0.0};
     public final double[] bl_distance = {0.0,0.0};
     public final double[] br_distance = {0.0,0.0};
-    public static final double angleConversionFactor = 360.0/(8.4/1.0); //8.4
-    public static final double distancePerPulse = 8.14/ (2 * (Math.PI * 2)); //rotations per meter
+    public static final double angleConversionFactor = (8.14/1.0) / 360; //degree per pulse
+    public static final double distancePerPulse = 8.14/ ((Math.PI * 4)); //distance per pulse
 
   }
   public static class OperatorConstants {

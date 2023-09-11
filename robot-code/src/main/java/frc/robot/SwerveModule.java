@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 /** Add your docs here. */
@@ -23,9 +24,9 @@ public class SwerveModule {
     private CANSparkMax angle_motor;
     private SparkMaxPIDController angle_controller;
     private SparkMaxPIDController drive_controller;
+    private SwerveModulePosition module_position;
     private CANcoder angle_encoder; //this will be used as more of an accurate measurement compared to the built in Encoder
     private RelativeEncoder integrated_angle_encoder; //this will be used to actually adjust the position
-    private double velocity;
     private int moduleNumber;
     //private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(null,null , null);  //used to calculate speeds with desire velocity and acceleration
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0, 0); //THESE VALUES NEED TO BE CALCULATED!
@@ -34,6 +35,7 @@ public class SwerveModule {
         drive_motor = new CANSparkMax(port_motor, t);
         angle_motor = new CANSparkMax(port_angle, t);
         angle_encoder = new CANcoder(port_encoder);
+        module_position = new SwerveModulePosition(); //keeps track of the modules angle and meters traveled
         integrated_angle_encoder = angle_motor.getEncoder();
 
         //creates PID controllers
@@ -59,6 +61,7 @@ public class SwerveModule {
     public void configureEncoders(){
         integrated_angle_encoder.setPositionConversionFactor(Constants.SwerveConstants.angleConversionFactor);
         drive_motor.getEncoder().setPositionConversionFactor(Constants.SwerveConstants.distancePerPulse);
+        drive_motor.getEncoder().setVelocityConversionFactor(Constants.SwerveConstants.distancePerPulse / 60); //rps
     }
 
 
@@ -74,14 +77,14 @@ public class SwerveModule {
 
     public void setSpeed(SwerveModuleState state, boolean isOpenLoop){
         if (isOpenLoop){ //if we are recieving continous input from the driver/controller. Anything that is not specific
-        velocity = state.speedMetersPerSecond / Constants.SwerveConstants.SwerveMaxSpeed;
-        drive_motor.set(velocity);
+        double velocity = state.speedMetersPerSecond / Constants.SwerveConstants.SwerveMaxSpeed;
+        drive_motor.set(velocity); //.set is a percentage of speed, from -1 to 1
         }
-        else {
-            drive_controller.setReference(state.speedMetersPerSecond,ControlType.kVelocity); //find the circumfrance of the wheel, then divide it by rotations (8.14) to get distancePerPulse
+        else { //gradual acceleration for autonomous things
+            drive_controller.setReference(state.speedMetersPerSecond,ControlType.kVelocity,0, feedforward.calculate(state.speedMetersPerSecond)); 
 
-        } //.set is a percentage of speed, from -1 to 1
-        //write pid stuff for this later
+        } 
+  
     }
 
     public void setAngle(SwerveModuleState state){ //switch to canENcoders bc neo ones arent accurate (42:1)
@@ -94,8 +97,16 @@ public class SwerveModule {
      }
 
      public Rotation2d getDegrees(){
-        double angle = 360 * getRotations().getRotations();
+        double angle = 360 * getRotations().getRotations(); //gets the number of rotations (-0.5,0.99) and multiplies it by 360 to get current angle
         return Rotation2d.fromDegrees(angle);
+     }
+
+     public SwerveModulePosition getPositionObject(){
+        return module_position;
+     }
+
+     public double getDistance(){
+        return module_position.distanceMeters;
      }
 
     public int getModuleNumber(){
