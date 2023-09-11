@@ -96,7 +96,6 @@ public class Swerve extends SubsystemBase {
     }
     return instance;
   }
-  
   @Override
   public void periodic() {
     m_odometry.update(getNavxAngle(), new SwerveModulePosition[] {SwerveModules[0].getPositionObject(),SwerveModules[1].getPositionObject(),SwerveModules[2].getPositionObject(),SwerveModules[3].getPositionObject()});
