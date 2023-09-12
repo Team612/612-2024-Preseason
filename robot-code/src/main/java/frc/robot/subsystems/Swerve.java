@@ -15,6 +15,7 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -44,7 +45,7 @@ public class Swerve extends SubsystemBase {
     this.br = br;
 
     swerve_kinemtics = new SwerveDriveKinematics(this.fl,this.fr,this.bl,this.br);
-  
+
 
     //SwerveModule initalization
     SwerveModules[0] = new SwerveModule(1, Constants.DrivetrainConstants.SPARK_FL, Constants.DrivetrainConstants.SPARK_ANGLE_FL, Constants.DrivetrainConstants.ENCODER_ANGLE_FL,MotorType.kBrushless); //fl
@@ -74,10 +75,14 @@ public class Swerve extends SubsystemBase {
     return Rotation2d.fromDegrees(navx.getAngle());
   }
 
-  public Pose2d getRobotPosition(){
-    return poseEstimator.getEstimatedPosition();
+  public Supplier<Pose2d> getRobotPosition(){
+    Supplier<Pose2d> pose2d = () -> poseEstimator.getEstimatedPosition();
+    return pose2d;
   }
 
+  public SwerveDriveKinematics getKinematics(){
+    return swerve_kinemtics;
+  }
   public static Swerve getInstance(){
     if (instance == null){
       Constants.SwerveConstants sc = new Constants.SwerveConstants();
