@@ -136,6 +136,15 @@ public final class Constants {
     public final double[] br_distance = {0.0,0.0};
     public static final double angleConversionFactor = (8.14/1.0) / 360; //degree per pulse
     public static final double distancePerPulse = 8.14/ ((Math.PI * 4)); //distance per pulse
+    //pid
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    //gains
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kA = 0;
+
 
   }
   public static class OperatorConstants {

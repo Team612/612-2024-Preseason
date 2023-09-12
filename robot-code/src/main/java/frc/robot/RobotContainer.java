@@ -148,13 +148,13 @@ public class RobotContainer {
   
   private final SequentialCommandGroup m_RedMiddleLeaveAndDock = new SequentialCommandGroup(
     // boop.andthen(
-    new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "RedMiddleLeaveAndDock", Constants.DrivetrainConstants.constraint, true, false)
+    new FollowTrajectoryPathPlanner(m_swerve, estimator, "RedMiddleLeaveAndDock", Constants.DrivetrainConstants.constraint, true, false)
     .andThen(new DockingSequence(m_drivetrain))
   );
 
   private final SequentialCommandGroup m_BlueMiddleLeaveAndDock = new SequentialCommandGroup(
     // boop.andthen(
-    new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "BlueMiddleLeaveAndDock", Constants.DrivetrainConstants.constraint, true, false)
+    new FollowTrajectoryPathPlanner(m_swerve, estimator, "BlueMiddleLeaveAndDock", Constants.DrivetrainConstants.constraint, true, false)
     .andThen(new DockingSequence(m_drivetrain))
   );
 
@@ -188,12 +188,12 @@ public class RobotContainer {
 
   private void configureShuffleBoardBindings(){
     // m_chooser.addOption("Auto-Balance", new DockingSequence(m_drivetrain));
-    m_chooser.addOption("Red Bottom Leave", new SequentialCommandGroup(new Boop(m_scope, m_arm).andThen(new ProxyCommand(() -> new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "RedBottomLeave", Constants.DrivetrainConstants.constraint, true, false)))));
-    m_chooser.addOption("Red Top Leave", new SequentialCommandGroup(new Boop(m_scope, m_arm).andThen(new ProxyCommand(() -> new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "RedTopLeave", Constants.DrivetrainConstants.constraint, true, false)))));
+    m_chooser.addOption("Red Bottom Leave", new SequentialCommandGroup(new Boop(m_scope, m_arm).andThen(new ProxyCommand(() -> new FollowTrajectoryPathPlanner(m_swerve, estimator, "RedBottomLeave", Constants.DrivetrainConstants.constraint, true, false)))));
+    m_chooser.addOption("Red Top Leave", new SequentialCommandGroup(new Boop(m_scope, m_arm).andThen(new ProxyCommand(() -> new FollowTrajectoryPathPlanner(m_swerve, estimator, "RedTopLeave", Constants.DrivetrainConstants.constraint, true, false)))));
    
-    m_chooser.addOption("Blue Bottom Leave", new SequentialCommandGroup(new Boop(m_scope, m_arm).andThen(new ProxyCommand(() -> new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "BlueBottomLeave", Constants.DrivetrainConstants.constraint, true, true)))));
+    m_chooser.addOption("Blue Bottom Leave", new SequentialCommandGroup(new Boop(m_scope, m_arm).andThen(new ProxyCommand(() -> new FollowTrajectoryPathPlanner(m_swerve, estimator, "BlueBottomLeave", Constants.DrivetrainConstants.constraint, true, true)))));
     
-    m_chooser.addOption("Blue Top Leave", new SequentialCommandGroup(new Boop(m_scope, m_arm).andThen(new ProxyCommand(() -> new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "BlueTopLeave", Constants.DrivetrainConstants.constraint, true, true)))));
+    m_chooser.addOption("Blue Top Leave", new SequentialCommandGroup(new Boop(m_scope, m_arm).andThen(new ProxyCommand(() -> new FollowTrajectoryPathPlanner(m_swerve, estimator, "BlueTopLeave", Constants.DrivetrainConstants.constraint, true, true)))));
    
     m_chooser.addOption("Red Middle Leave and Dock", new SequentialCommandGroup(new Boop(m_scope, m_arm).andThen(new ProxyCommand(() -> m_RedMiddleLeaveAndDock))));
     m_chooser.addOption("Blue Middle Leave and Dock", new SequentialCommandGroup(new Boop(m_scope, m_arm).andThen(new ProxyCommand(() -> m_BlueMiddleLeaveAndDock))));

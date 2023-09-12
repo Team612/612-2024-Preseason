@@ -29,7 +29,10 @@ public class SwerveModule {
     private RelativeEncoder integrated_angle_encoder; //this will be used to actually adjust the position
     private int moduleNumber;
     //private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(null,null , null);  //used to calculate speeds with desire velocity and acceleration
-    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0, 0, 0); //THESE VALUES NEED TO BE CALCULATED!
+    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.SwerveConstants.kS,
+     Constants.SwerveConstants.kV,
+      Constants.SwerveConstants.kA); 
+
     public SwerveModule(int n, int port_motor,int port_angle, int port_encoder, MotorType t){
         moduleNumber = n;
         drive_motor = new CANSparkMax(port_motor, t);
@@ -46,14 +49,14 @@ public class SwerveModule {
 
     public void configureController(){
         //TEMPORARY VALUES!!
-        angle_controller.setP(0.0);
-        angle_controller.setI(0.0);
-        angle_controller.setD(0.0);
+        angle_controller.setP(Constants.SwerveConstants.kP);
+        angle_controller.setI(Constants.SwerveConstants.kI);
+        angle_controller.setD(Constants.SwerveConstants.kD);
         angle_controller.setFF(0.0);
 
-        drive_controller.setP(0.0);
-        drive_controller.setI(0.0);
-        drive_controller.setD(0.0);
+        drive_controller.setP(Constants.SwerveConstants.kP);
+        drive_controller.setI(Constants.SwerveConstants.kI);
+        drive_controller.setD(Constants.SwerveConstants.kD);
         drive_controller.setFF(0.0);
 
     }
