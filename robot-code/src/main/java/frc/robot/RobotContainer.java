@@ -58,8 +58,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   
   //Drive subsystems declarations 
+  private final Swerve m_swerve = Swerve.getInstance();
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
-  private final DefaultDrive m_defaultdrive = new DefaultDrive(m_drivetrain);
+  private final DefaultDrive m_defaultdrive = new DefaultDrive(m_swerve);
 
 
  // Trajectories
@@ -67,7 +68,6 @@ public class RobotContainer {
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   //Subsystems
-  private final Swerve m_swerve = Swerve.getInstance();
   private final FieldOrientedDrive m_FieldOrientedDrive = new FieldOrientedDrive(m_swerve);
   private final Arm m_arm = Arm.getInstance();
   private final Telescope m_scope = Telescope.getInstance();
@@ -243,9 +243,6 @@ public class RobotContainer {
   private void configureDefaultCommands(){
     //m_drivetrain.setDefaultCommand(m_FieldOrientedDrive);
     m_swerve.setDefaultCommand(m_FieldOrientedDrive);
-    m_arm.setDefaultCommand(m_pivot);
-    m_scope.setDefaultCommand(m_telescope);
-    m_grabber.setDefaultCommand(m_release);
     m_Led.setDefaultCommand(m_TeleopDefault.ignoringDisable(true));
 
   }
