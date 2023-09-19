@@ -81,11 +81,11 @@ public class FollowTrajectoryPathPlanner extends CommandBase {
     PIDController yController = new PIDController(0, 0, 0);
     
     PathPlannerTrajectory alliancePath = PathPlannerTrajectory.transformTrajectoryForAlliance(path, alliance);
-    Trajectory traj = alliancePath;
 
  
    
-    controller = new SwerveControllerCommand(traj, s_swerve.getRobotPosition() , s_swerve.getKinematics(), xController , yController, thetaController, null);
+    controller = new SwerveControllerCommand((Trajectory) alliancePath, s_swerve.getRobotPosition() , s_swerve.getKinematics(), xController , yController, thetaController, s_swerve :: setModuleStates,s_swerve);
+    //SwerveControllerCommand will create the desired module states, then pass them into s_swerve.setModuleStates
    
     controller.initialize();
   }

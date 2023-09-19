@@ -34,7 +34,8 @@ public class Swerve extends SubsystemBase {
   private SwerveDriveKinematics swerve_kinemtics;
   private SwerveDrivePoseEstimator poseEstimator;
   private SwerveModulePosition[] swerve_position;
-  AHRS navx = new AHRS(I2C.Port.kMXP); //gyro
+  private AHRS navx = new AHRS(I2C.Port.kMXP); //gyro
+  private Vision m_vision = Vision.getVisionInstance();
   /** Creates a new Swerve. */
 
   public Swerve(Translation2d fl,Translation2d fr,Translation2d bl,Translation2d br) {
@@ -62,6 +63,7 @@ public class Swerve extends SubsystemBase {
     ChassisSpeeds speed = new ChassisSpeeds(x,y,angle);
     SwerveModuleState[] moduleStates = swerve_kinemtics.toSwerveModuleStates(speed);
 
+    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.SwerveConstants.SwerveMaxSpeed); //to set a limit of how fast a wheel can be moving
     for (SwerveModule mod : SwerveModules){
       mod.setDesiredState(moduleStates[mod.getModuleNumber()], true);
     }
@@ -69,6 +71,13 @@ public class Swerve extends SubsystemBase {
   
 
 
+  }
+
+  public void setModuleStates(SwerveModuleState[] desiredStates){
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.SwerveConstants.SwerveMaxSpeed); //to set a limit of how fast a wheel can be moving
+    for (SwerveModule mod : SwerveModules){
+      mod.setDesiredState(desiredStates[mod.getModuleNumber()], true);
+    }
   }
 
   public Rotation2d getNavxAngle(){
@@ -83,6 +92,34 @@ public class Swerve extends SubsystemBase {
   public SwerveDriveKinematics getKinematics(){
     return swerve_kinemtics;
   }
+
+  public double getYaw(){
+    return navx.getYaw();
+  }
+  public double getPitch(){
+    return navx.getPitch();
+    }
+
+  public double linearAccelX(){
+    return navx.getWorldLinearAccelX();
+  }
+
+  public double linearAccelY(){
+    return navx.getWorldLinearAccelY();
+  }
+
+  public double linearAccelZ(){
+    return navx.getWorldLinearAccelZ();
+  }
+
+  public double getAngularVel(){
+    return navx.getRate();
+  }
+
+  public boolean isCalibrating(){
+    return navx.isCalibrating();
+  }
+
   public static Swerve getInstance(){
     if (instance == null){
       Constants.SwerveConstants sc = new Constants.SwerveConstants();
