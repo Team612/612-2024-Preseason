@@ -65,6 +65,9 @@ public class SwerveModule {
         integrated_angle_encoder.setPositionConversionFactor(Constants.SwerveConstants.angleConversionFactor);
         drive_motor.getEncoder().setPositionConversionFactor(Constants.SwerveConstants.distancePerPulse);
         drive_motor.getEncoder().setVelocityConversionFactor(Constants.SwerveConstants.distancePerPulse / 60); //rps
+        drive_motor.getEncoder().setInverted(false);
+        angle_motor.getEncoder().setInverted(false);
+        integrated_angle_encoder.setInverted(false);
     }
 
 
@@ -75,7 +78,7 @@ public class SwerveModule {
     }
 
     public void resetToAbsolute(){ //resets the module's wheel to 0 degrees
-       integrated_angle_encoder.setPosition(0 - getRotations().getRotations());
+       integrated_angle_encoder.setPosition(0 - getRawRotations().getRotations());
     }
 
     public void setSpeed(SwerveModuleState state, boolean isOpenLoop){
@@ -95,12 +98,15 @@ public class SwerveModule {
         angle_controller.setReference(angle.getDegrees(), ControlType.kPosition); //we're moving based off angular position, hence the control type
      } 
 
-     public Rotation2d getRotations(){
+     public Rotation2d getRawRotations(){
+        return Rotation2d.fromRotations(angle_encoder.getPosition().getValue());
+     }
+     public Rotation2d getAbsoluteRotations(){
         return Rotation2d.fromRotations(angle_encoder.getAbsolutePosition().getValue());
      }
 
      public Rotation2d getDegrees(){
-        double angle = 360 * getRotations().getRotations(); //gets the number of rotations (-0.5,0.99) and multiplies it by 360 to get current angle
+        double angle = 360 * getAbsoluteRotations().getRotations(); //gets the number of rotations (-0.5,0.99) and multiplies it by 360 to get current angle
         return Rotation2d.fromDegrees(angle);
      }
 

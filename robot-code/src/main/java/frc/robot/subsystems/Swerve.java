@@ -6,19 +6,27 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import frc.robot.subsystems.PoseEstimator;
 
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -32,7 +40,7 @@ public class Swerve extends SubsystemBase {
   private Translation2d br;
   private SwerveModule[] SwerveModules = new SwerveModule[4];
   private SwerveDriveKinematics swerve_kinemtics;
-  private SwerveDrivePoseEstimator poseEstimator;
+  private PoseEstimator poseEstimator;
   private SwerveModulePosition[] swerve_position;
   AHRS navx = new AHRS(I2C.Port.kMXP); //gyro
   /** Creates a new Swerve. */
@@ -54,7 +62,7 @@ public class Swerve extends SubsystemBase {
     SwerveModules[3] = new SwerveModule(4, Constants.DrivetrainConstants.SPARK_BR, Constants.DrivetrainConstants.SPARK_ANGLE_BR,Constants.DrivetrainConstants.ENCODER_ANGLE_BR,  MotorType.kBrushless); //br
 
     swerve_position = new SwerveModulePosition[]{SwerveModules[0].getPositionObject(),SwerveModules[1].getPositionObject(),SwerveModules[2].getPositionObject(),SwerveModules[3].getPositionObject()};
-    poseEstimator = new SwerveDrivePoseEstimator(swerve_kinemtics, getNavxAngle(),swerve_position , new Pose2d(0, 0, getNavxAngle()));
+    poseEstimator = new PoseEstimator();
   }
 
 
@@ -71,18 +79,86 @@ public class Swerve extends SubsystemBase {
 
   }
 
+  public void resetWheelOrientation(){
+    ChassisSpeeds speed = new ChassisSpeeds(0,0,0);
+    SwerveModuleState[] moduleStates = swerve_kinemtics.toSwerveModuleStates(speed);
+    for (SwerveModule mod : SwerveModules){
+      mod.setDesiredState(moduleStates[mod.getModuleNumber()], true);
+    }
+  }
+
   public Rotation2d getNavxAngle(){
     return Rotation2d.fromDegrees(navx.getAngle());
   }
 
+  public PoseEstimator getPoseEstimator(){
+    return poseEstimator;
+  }
+
+  public void setNavxAngleOffset(Rotation2d offset){
+    navx.setAngleAdjustment(offset.getDegrees());
+  }
+
+  public Rotation2d getEstimatedRotations(){
+    return poseEstimator.getCurrentPose().getRotation();
+  }
+
   public Supplier<Pose2d> getRobotPosition(){
-    Supplier<Pose2d> pose2d = () -> poseEstimator.getEstimatedPosition();
+    Supplier<Pose2d> pose2d = () -> poseEstimator.getCurrentPose();
     return pose2d;
   }
+
+  public SwerveModulePosition[] getModulePosition(){
+    return swerve_position;
+  }
+
+  
 
   public SwerveDriveKinematics getKinematics(){
     return swerve_kinemtics;
   }
+
+  public void resetPoseEstimator(){ 
+    poseEstimator.resetPose();
+    
+  }
+
+  public static SwerveControllerCommand runTrajectory(Swerve s_swerve, PathPlannerTrajectory path){
+    ProfiledPIDController thetaController = new ProfiledPIDController(Constants.SwerveConstants.kP,
+     Constants.SwerveConstants.kI,
+      Constants.SwerveConstants.kD,
+       new TrapezoidProfile.Constraints(Constants.SwerveConstants.SwerveMaxSpeed, 5)
+       );
+
+    PIDController xController = new PIDController(Constants.SwerveConstants.kP,
+    Constants.SwerveConstants.kI,
+    Constants.SwerveConstants.kD); 
+    PIDController yController = new PIDController(Constants.SwerveConstants.kP, 
+    Constants.SwerveConstants.kI, 
+    Constants.SwerveConstants.kD); 
+
+    return new SwerveControllerCommand(path, s_swerve.getRobotPosition(),s_swerve.getKinematics(), xController, yController,thetaController, null);
+    
+  }
+
+  /*
+     public void RobotOrientedDrive(double y, double x, double zRot){
+    if(Math.abs(x) < DEADZONE) x = 0;
+    if(Math.abs(y) < DEADZONE) y = 0;
+    if(Math.abs(zRot) < DEADZONE) zRot = 0;
+    drivetrain.driveCartesian(y, x, zRot);
+  }
+
+  //Field Oriented Drive
+
+  public void FieldOrientedDrive(double x, double y, double zRotation){
+    if(Math.abs(x) < DEADZONE) x = 0;
+    if(Math.abs(y) < DEADZONE) y = 0;
+    if(Math.abs(zRotation) < DEADZONE) zRotation = 0;
+    drivetrain.driveCartesian(x, y, zRotation, getNavxAngle().unaryMinus().minus(navxAngleOffset.unaryMinus()));
+    // System.out.println("******************************************" + navxAngleOffset + "**************************************");
+  }
+   */
   public static Swerve getInstance(){
     if (instance == null){
       Constants.SwerveConstants sc = new Constants.SwerveConstants();
@@ -94,6 +170,12 @@ public class Swerve extends SubsystemBase {
     }
     return instance;
   }
+
+
+
+  //public static CommandBase followTrajectory(){
+    
+  //}
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

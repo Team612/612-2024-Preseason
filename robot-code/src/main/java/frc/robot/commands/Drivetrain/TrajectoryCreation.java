@@ -10,6 +10,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 
+import frc.robot.subsystems.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -104,8 +105,8 @@ public class TrajectoryCreation {
         );
     }
 
-    public PathPlannerTrajectory onthefly(PoseEstimator estimation, Vision vision, double y_translation){
-        Pose2d estimatedPose = estimation.getCurrentPose();
+    public PathPlannerTrajectory onthefly(PoseEstimator estimator, Vision vision, double y_translation){
+        Pose2d estimatedPose = estimator.getCurrentPose();
 
         double x = estimatedPose.getX();
         double y = estimatedPose.getY();

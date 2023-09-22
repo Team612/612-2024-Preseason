@@ -6,7 +6,6 @@ package frc.robot.commands.Drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.controls.ControlMap;
-import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Swerve;
 
 public class FieldOrientedDrive extends CommandBase {
@@ -21,7 +20,7 @@ public class FieldOrientedDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_swerve.drive(0, 0, 0);
+    m_swerve.resetWheelOrientation();
     //m_drivetrain.setFodState(true);
   }
 

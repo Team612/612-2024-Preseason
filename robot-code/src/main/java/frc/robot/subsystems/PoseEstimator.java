@@ -11,6 +11,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.MecanumDrivePoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,13 +29,13 @@ import frc.robot.Robot;
 
 public class PoseEstimator extends SubsystemBase {
   /** Creates a new PoseEstimator. */
-  MecanumDrivePoseEstimator m_DrivePoseEstimator;
+  SwerveDrivePoseEstimator m_SwervePoseEstimator;
   PhotonPoseEstimator m_PhotonPoseEstimator;
   Vision m_Vision;
-  Drivetrain m_drivetrain;
+  Swerve s_swerve;
   private Field2d m_field;
 
-  
+  //values prob need to be edited later
   public static final double FIELD_LENGTH_METERS = Units.inchesToMeters(651.25);
   public static final double FIELD_WIDTH_METERS = Units.inchesToMeters(315.5);
   private double previousPipelineTimestamp = 0;
@@ -49,16 +50,16 @@ public class PoseEstimator extends SubsystemBase {
   
 
   public PoseEstimator() {
-    m_drivetrain = Drivetrain.getInstance();
+    s_swerve = Swerve.getInstance();
     m_Vision = Vision.getVisionInstance();
     m_field = new Field2d();
     SmartDashboard.putData("Field", m_field);
 
 
-    m_DrivePoseEstimator = new MecanumDrivePoseEstimator(
-      Constants.DrivetrainConstants.kDriveKinematics, 
-      m_drivetrain.getNavxAngle(), 
-      m_drivetrain.getMecanumDriveWheelPositions(), 
+    m_SwervePoseEstimator = new SwerveDrivePoseEstimator(
+      s_swerve.getKinematics(), 
+      s_swerve.getNavxAngle(), 
+      s_swerve.getModulePosition(), 
       new Pose2d(),
       stateStdDevs,
       visionMeasurementStdDevs
@@ -80,11 +81,11 @@ public class PoseEstimator extends SubsystemBase {
   public void periodic() {
 
     if(Robot.initAllianceColor == Alliance.Blue && once){
-      setCurrentPose(new Pose2d(0,0,new Rotation2d(Units.degreesToRadians(180))));
+      setPose(new Pose2d(0,0,new Rotation2d(Units.degreesToRadians(180))));
       once = false;
     }
 
-    m_DrivePoseEstimator.update(m_drivetrain.getNavxAngle(), m_drivetrain.getMecanumDriveWheelPositions());
+    m_SwervePoseEstimator.update(s_swerve.getNavxAngle(), s_swerve.getModulePosition());
     if(m_PhotonPoseEstimator != null){
       m_PhotonPoseEstimator.update().ifPresent(estimatedRobotPose -> {
       var estimatedPose = estimatedRobotPose.estimatedPose;
@@ -106,28 +107,39 @@ public class PoseEstimator extends SubsystemBase {
             //checking from the camera to the tag is less than 4
             if (distance < 4 && target.getPoseAmbiguity() <= .2) {
               previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
-              m_DrivePoseEstimator.addVisionMeasurement(camPose.toPose2d(), estimatedRobotPose.timestampSeconds);
+              m_SwervePoseEstimator.addVisionMeasurement(camPose.toPose2d(), estimatedRobotPose.timestampSeconds);
             }
           }
         } 
 
         else {
             previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
-            m_DrivePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
+            m_SwervePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
         }
       }
       });
     }
     m_field.setRobotPose(getCurrentPose());
+    m_SwervePoseEstimator.update(s_swerve.getNavxAngle(), s_swerve.getModulePosition());
   }
 
 
   public Pose2d getCurrentPose() {
-    return m_DrivePoseEstimator.getEstimatedPosition();
+    return m_SwervePoseEstimator.getEstimatedPosition();
   }
 
-  public void setCurrentPose(Pose2d newPose) {
-    m_DrivePoseEstimator.resetPosition(m_drivetrain.getNavxAngle(), m_drivetrain.getMecanumDriveWheelPositions(), newPose);
+  public void resetPose() {
+    m_SwervePoseEstimator.resetPosition(s_swerve.getNavxAngle(), s_swerve.getModulePosition(), getCurrentPose());
   }
+
+  public void setPose(Pose2d newPose){
+    m_SwervePoseEstimator.resetPosition(s_swerve.getNavxAngle(), s_swerve.getModulePosition(), newPose);
+  }
+
+
+    
+  
+
+
 
 }

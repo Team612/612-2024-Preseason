@@ -3,26 +3,15 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands.Drivetrain;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import javax.swing.SpringLayout.Constraints;
-
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
-import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.math.controller.PIDController;
@@ -37,7 +26,7 @@ public class FollowTrajectoryPathPlanner extends CommandBase {
   private final PathConstraints constraints;
   private final boolean resetOdom;
   private final boolean isBlueAlliance;
-  private SwerveControllerCommand controller;
+  private SwerveControllerCommand swerveController;
   private ProfiledPIDController thetaController;
 
   private CommandBase controllerCommand = Commands.none();
@@ -76,24 +65,33 @@ public class FollowTrajectoryPathPlanner extends CommandBase {
       alliance = Alliance.Blue;
     }
 
-    thetaController = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(Constants.SwerveConstants.SwerveMaxSpeed, 5)); //EDIT THESE VALUES
-    PIDController xController = new PIDController(0, 0, 0); //THESE VALUYES NEED TO BE EDITED!!
-    PIDController yController = new PIDController(0, 0, 0);
+    thetaController = new ProfiledPIDController(Constants.SwerveConstants.kP,
+     Constants.SwerveConstants.kI,
+      Constants.SwerveConstants.kD,
+       new TrapezoidProfile.Constraints(Constants.SwerveConstants.SwerveMaxSpeed, 5)
+       );
+
+    PIDController xController = new PIDController(Constants.SwerveConstants.kP,
+    Constants.SwerveConstants.kI,
+    Constants.SwerveConstants.kD); 
+    PIDController yController = new PIDController(Constants.SwerveConstants.kP, 
+    Constants.SwerveConstants.kI, 
+    Constants.SwerveConstants.kD); 
     
     PathPlannerTrajectory alliancePath = PathPlannerTrajectory.transformTrajectoryForAlliance(path, alliance);
     Trajectory traj = alliancePath;
 
  
    
-    controller = new SwerveControllerCommand(traj, s_swerve.getRobotPosition() , s_swerve.getKinematics(), xController , yController, thetaController, null);
-   
-    controller.initialize();
+    swerveController = new SwerveControllerCommand(traj, s_swerve.getRobotPosition() , s_swerve.getKinematics(), xController , yController, thetaController, null);
+    controllerCommand = swerveController;
+    controllerCommand.initialize();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    controller.execute();
+    controllerCommand.execute();
   }
 
   // Called once the command ends or is interrupted.
@@ -105,6 +103,6 @@ public class FollowTrajectoryPathPlanner extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return controller.isFinished();
+    return controllerCommand.isFinished();
   }
 }

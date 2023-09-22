@@ -8,14 +8,14 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Swerve;
 
 public class RunOnTheFly extends CommandBase {
-  private final Drivetrain driveSystem;
   private final Vision m_vision;
   private final PoseEstimator poseEstimatorSystem;
+  private Swerve m_swerve;
   private final boolean resetOdom;
   private final TrajectoryCreation m_traj;
   private final double translation;
@@ -23,29 +23,30 @@ public class RunOnTheFly extends CommandBase {
   private CommandBase controllerCommand = Commands.none();
 
   /** Creates a new RunOnTheFly. */
-  public RunOnTheFly(Drivetrain d, PoseEstimator p, boolean r, TrajectoryCreation traj, Vision v, 
+  public RunOnTheFly(Swerve s, PoseEstimator p, boolean r, TrajectoryCreation traj, Vision v, 
                     double y) {
     // Use addRequirements() here to declare subsystem dependencies.
-    driveSystem = d;
+    m_swerve = s;
     poseEstimatorSystem = p;
     resetOdom = r;
     m_traj = traj;
     m_vision = v;
     translation = y;
+    m_swerve = Swerve.getInstance();
 
-    addRequirements(d, v, p);
+    addRequirements(s, v, p);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    PathPlannerTrajectory path = m_traj.onthefly(poseEstimatorSystem, m_vision, translation);
+    PathPlannerTrajectory path = m_traj.onthefly(m_swerve.getPoseEstimator(), m_vision, translation);
 
     if(resetOdom){
-      driveSystem.resetOdometry();
+      m_swerve.resetPoseEstimator();
     }
 
-    controllerCommand = Drivetrain.followTrajectory(driveSystem, poseEstimatorSystem, path);
+    controllerCommand = Swerve.runTrajectory(m_swerve, path); //returns a trajectory based off the path
     controllerCommand.initialize();
 
   }
