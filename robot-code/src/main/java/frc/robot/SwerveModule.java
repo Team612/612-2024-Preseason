@@ -75,6 +75,7 @@ public class SwerveModule {
     //as of right now, i am writing under the assumption that we will be using the CANCoders instead of the NEO's built in ones
     public void setDesiredState(SwerveModuleState state, boolean loop){
         setSpeed(state, loop);
+        setAngle(state);
     }
 
     public void resetToAbsolute(){ //resets the module's wheel to 0 degrees
@@ -93,11 +94,23 @@ public class SwerveModule {
   
     }
 
-    public void setAngle(SwerveModuleState state){ //switch to canENcoders bc neo ones arent accurate (42:1)
-        Rotation2d angle = state.angle;
-        angle_controller.setReference(angle.getDegrees(), ControlType.kPosition); //we're moving based off angular position, hence the control type
+    public void setAngle(SwerveModuleState state){ 
+        Rotation2d angle = state.angle; //kPositions takes in amount of rotations
+        angle_controller.setReference(getRotationsFromDegree(angle), ControlType.kPosition); //we're moving based off angular position, hence the control type
      } 
+    
 
+     public double getRotationsFromDegree(Rotation2d x){
+        double angle = x.getDegrees()/360; //absolute position
+        if (angle < 0){ //to take shortest path back
+            return Rotation2d.fromRotations(angle * -16384.0).getRotations(); //max amount of rotations backwards
+        }
+        else {
+            return Rotation2d.fromRotations(angle * 16383.0).getRotations(); //max amount of rotations forward
+        }
+
+        
+     }
      public Rotation2d getRawRotations(){
         return Rotation2d.fromRotations(angle_encoder.getPosition().getValue());
      }
