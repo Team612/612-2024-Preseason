@@ -9,12 +9,13 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
-  private CANSparkMax prop; //propulsion motor
   double currentVelocity; // rotations per minute
   double maxVelocity = -21666; //re calculate 
   // private CANSparkMax hoodMotor = new CANSparkMax(5, MotorType.kBrushless);
-  private CANSparkMax shooterLead = new CANSparkMax(6, CANSparkMaxLowLevel.MotorType.kBrushless); //change ports later
-  private CANSparkMax shooterFollow = new CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless);   //motors 
+  private CANSparkMax leftprop = new CANSparkMax(6, CANSparkMaxLowLevel.MotorType.kBrushless); //propulsion motor
+  private CANSparkMax rightprop = new CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless);  // second propulsion motor
+
+  private final PIDController velocityController = new PIDController(0.1, 0.0, 0.0); // Pid used to contorl velocity
   
    //PID Gains (need to update)
   double p, i, d, f ;
@@ -24,30 +25,42 @@ public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
   public Shooter() {
 
-    this.shooterLead.setInverted(true); // one moter goes one way one motor goes other way
-    this.shooterFollow.setInverted(false); // we need to invert one of the motors so that the ball spins out
+    leftprop.setInverted(true); // one moter goes one way one motor goes other way
+    rightprop.setInverted(false); // we need to invert one of the motors so that the ball spins out
 
     // this.shooterLead.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor); // think these are for talons, not sparks?
     // this.shooterLead.configClosedloopRamp(0.25);
     // this.shooterLead.configMotionParameters(shooterMotionParameters);
+
+    velocityController.setTolerance(100); // adjust value based on requirements
   }
 
   public double getVelocity() { //siri
-    return this.shooterLead.getSelectedSensorVelocity() / maxVelocity; /
+    return leftprop.getEncoder().getVelocity() / maxVelocity; /
 
   }
 
+  // for accurate shooting
+  public void setVelocity(double targetVelocity) {
+    // calulates how much power needs to be given to shooter motors in order to reach desired speed
+    double motorOutput = velocityController.calculate(getVelocity(), targetVelocity) / MAX_VELOCITY;
+
+    // Actually setting the motors to reach desired speed after calculation using pid
+    leftMotor.set(motorOutput);
+    rightMotor.set(motorOutput);
+}
+
   public double getPosition() { //vik
-    return this.shooterLead.getSelectedSensorPosition();
+    return leftprop.getEncoder().getSelectedSensorPosition();
   }
 
   public double getCurrentDraw() {
-    return this.shooterLead.getSupplyCurrent();
+    return leftprop.getSupplyCurrent();
     //
   }
 
   public double getVoltageOutput() {  //shruthi
-    return this.shooterLead.getBusVoltage();    //prob not right 
+    return leftprop.getBusVoltage();    //prob not right 
   }
 
   @Override
@@ -60,13 +73,16 @@ public class Shooter extends SubsystemBase {
     // Math.abs(this.getVoltageOutput()));
   }
 
-  public void set(ControlMode controlMode, double setpoint) {
-    shooterLead.set(controlMode, setpoint);
-    shooterFollow.set(controlMode, setpoint);
+  public void set(double value) {
+    // value has to be within -1 and 1
+    leftprop.set(value);
+    rightprop.set(value);
   }
 
   public void setPercentVelocity(double percentVelocity) {
-    this.set(ControlMode.Velocity, this.maxVelocity * percentVelocity);
+    //calculates desired velocity as a percent/portion of the maximum velocity
+    //set motor velocities based on this value
+    this.set(this.maxVelocity * percentVelocity);
   }
 
   // public void setHood(double setpoint) {
