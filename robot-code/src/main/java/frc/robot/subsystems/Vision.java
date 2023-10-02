@@ -42,54 +42,45 @@ public class Vision extends SubsystemBase {
    * @throws IOException
    **/
 
+// changed x & y values into meters
   public Vision(PhotonCamera camera) {
     // tag 1
-    final Translation3d translation1 = new Translation3d(15.513558, 1.071626, 0.462788);
+    final Translation3d translation1 = new Translation3d(0, 1.8288, 0.462788);
     final Quaternion q1 = new Quaternion(0, 0, 0, 1);
     final Rotation3d rotation1 = new Rotation3d(q1);
     final AprilTag tag1 = new AprilTag(1, new Pose3d(translation1, rotation1));
 
     // tag 2
-    final Translation3d translation2 = new Translation3d(15.513558, 2.748026, 0.462788);
+    final Translation3d translation2 = new Translation3d(1.3716, 3.6576, 0.462788);
     final Quaternion q2 = new Quaternion(0, 0, 0, 1);
     final Rotation3d rotation2 = new Rotation3d(q2);
     final AprilTag tag2 = new AprilTag(2, new Pose3d(translation2, rotation2));
 
     // tag 3
-    final Translation3d translation3 = new Translation3d(15.513558, 4.424426, 0.462788);
+    final Translation3d translation3 = new Translation3d(4.1148, 3.6576, 0.462788);
     final Quaternion q3 = new Quaternion(0, 0, 0, 1);
     final Rotation3d rotation3 = new Rotation3d(q3);
     final AprilTag tag3 = new AprilTag(3, new Pose3d(translation3, rotation3));
 
     // tag 4
-    final Translation3d translation4 = new Translation3d(16.178784, 6.749796, 0.695452);
+    final Translation3d translation4 = new Translation3d(5.4864, 1.8288, 0.695452);
     final Quaternion q4 = new Quaternion(0, 0, 0, 1);
     final Rotation3d rotation4 = new Rotation3d(q4);
     final AprilTag tag4 = new AprilTag(4, new Pose3d(translation4, rotation4));
 
     // tag 5
-    final Translation3d translation5 = new Translation3d(0.36195, 6.749796, 0.695452);
+    final Translation3d translation5 = new Translation3d(1.3716 * 3, 0, 0.695452);
     final Quaternion q5 = new Quaternion(1, 0, 0, 0);
     final Rotation3d rotation5 = new Rotation3d(q5);
     final AprilTag tag5 = new AprilTag(5, new Pose3d(translation5, rotation5));
 
     // tag 6
-    final Translation3d translation6 = new Translation3d(1.02743, 4.424426, 0.462788);
+    final Translation3d translation6 = new Translation3d(1.3716, 0, 0.462788);
     final Quaternion q6 = new Quaternion(1, 0, 0, 0);
     final Rotation3d rotation6 = new Rotation3d(q6);
     final AprilTag tag6 = new AprilTag(6, new Pose3d(translation6, rotation6));
 
-    // tag 7
-    final Translation3d translation7 = new Translation3d(1.02743, 2.748026, 0.462788);
-    final Quaternion q7 = new Quaternion(1, 0, 0, 0);
-    final Rotation3d rotation7 = new Rotation3d(q7);
-    final AprilTag tag7 = new AprilTag(7, new Pose3d(translation7, rotation7));
-
-    // tag 8
-    final Translation3d translation8 = new Translation3d(1.02743, 1.071626, 0.462788);
-    final Quaternion q8 = new Quaternion(1, 0, 0, 0);
-    final Rotation3d rotation8 = new Rotation3d(q8);
-    final AprilTag tag8 = new AprilTag(8, new Pose3d(translation8, rotation8));
+   
     ArrayList<AprilTag> atList = new ArrayList<AprilTag>();
     atList.add(tag1);
     atList.add(tag2);
@@ -97,14 +88,12 @@ public class Vision extends SubsystemBase {
     atList.add(tag4);
     atList.add(tag5);
     atList.add(tag6);
-    atList.add(tag7);
-    atList.add(tag8);
 
     robotInTagPose = new Pose2d();
     this.camera = camera;
     resetRobotPose();
 
-    aprilTagFieldLayout = new AprilTagFieldLayout(atList, 16.4592, 8.2296);
+    aprilTagFieldLayout = new AprilTagFieldLayout(atList, 5.4864, 3.6576);
     // robotToCam = new Transform3d(new Translation3d(Units.inchesToMeters(1), Units.inchesToMeters(ShuffleBoardButtons.transformationYTune.getDouble(0)), 
     //              Units.inchesToMeters(0)), new Rotation3d(0,0,0));
     robotToCam = new Transform3d();
