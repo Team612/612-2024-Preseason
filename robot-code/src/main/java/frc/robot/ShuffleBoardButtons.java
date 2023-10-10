@@ -7,6 +7,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Swerve;
 
@@ -17,6 +18,7 @@ public class ShuffleBoardButtons {
     ShuffleboardTab m_debugTab;
     ShuffleboardTab m_limitSwitchTab;
     ShuffleboardTab m_smShuffleboardTab;
+    ShuffleboardTab m_limelightTab;
     
     GenericEntry NavxAngle;
     GenericEntry PoseEstimatorAngle;
@@ -34,6 +36,10 @@ public class ShuffleBoardButtons {
 
     GenericEntry pivotBLS;
     GenericEntry telescopeLimitSwitch;
+
+    GenericEntry tx;
+    GenericEntry ty;
+    GenericEntry ta;
 
     GenericEntry isBlueAlliance;
 
@@ -56,6 +62,7 @@ public class ShuffleBoardButtons {
 
     //subsystem
     public Swerve m_swerve = Swerve.getInstance();
+    public Limelight m_limelight = Limelight.getInstance();
 
     
 
@@ -66,6 +73,7 @@ public class ShuffleBoardButtons {
         m_debugTab = Shuffleboard.getTab("Debug Tab");
         m_limitSwitchTab = Shuffleboard.getTab("Limit Switch Tab");
         m_smShuffleboardTab = Shuffleboard.getTab("SmartDashboard");
+        m_limelightTab = Shuffleboard.getTab("limelight");
 
         //debug entries
 
@@ -75,6 +83,10 @@ public class ShuffleBoardButtons {
         PoseEstimatorY = m_debugTab.add("PoseEstimator Y", 0.0).getEntry();
         isBlueAlliance = m_debugTab.add("isBlueAlliance", false).getEntry();
 
+        //limelight values
+        tx =  m_limelightTab.add("tx", 0.0).getEntry();
+        ty = m_limelightTab.add("ty", 0.0).getEntry();
+        ta = m_limelightTab.add("ta",0.0).getEntry();
 
         lowGeneral = m_debugTab.add("low General", 0.0).getEntry();
         midCube = m_debugTab.add("midCube", 0.0).getEntry();
@@ -115,8 +127,10 @@ public class ShuffleBoardButtons {
         PoseEstimator poseEstimator = PoseEstimator.getPoseEstimatorInstance();
         Pose2d estimator = poseEstimator.getCurrentPose();
 
-
         
+        tx.setDouble(m_limelight.getTx());
+        ty.setDouble(m_limelight.getTy());
+        ta.setDouble(m_limelight.getTa());
         NavxAngle.setDouble(m_swerve.getNavxAngle().getDegrees());
         PoseEstimatorAngle.setDouble(estimator.getRotation().getDegrees());
         PoseEstimatorX.setDouble(estimator.getX());
