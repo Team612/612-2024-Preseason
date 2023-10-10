@@ -1,25 +1,19 @@
-import cv2 as cv
-cam = cv.VideoCapture(0)
-cc = cv.VideoWriter_fourcc(*'XVID')
-file = cv.VideoWriter('output.avi', cc, 15.0, (640, 480))
-if not cam.isOpened():
-   print("error opening camera")
-   exit()
+import cv2
+
+cap = cv2.VideoCapture(0)
+
+# Check if the webcam is opened correctly
+if not cap.isOpened():
+    raise IOError("Cannot open webcam")
+
 while True:
-   # Capture frame-by-frame
-   ret, frame = cam.read()
-   # if frame is read correctly ret is True
-   if not ret:
-      print("error in retrieving frame")
-      break
-   img = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-   cv.imshow('frame', img)
-   file.write(img)
+    ret, frame = cap.read()
+    frame = cv2.resize(frame, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
+    cv2.imshow('Input', frame)
 
-   
-   if cv.waitKey(1) == ord('q'):
-      break
+    c = cv2.waitKey(1)
+    if c == 27:
+        break
 
-cam.release()
-file.release()
-cv.destroyAllWindows()
+cap.release()
+cv2.destroyAllWindows()
