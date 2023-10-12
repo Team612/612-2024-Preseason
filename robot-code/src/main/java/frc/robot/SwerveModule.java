@@ -75,7 +75,7 @@ public class SwerveModule {
     //as of right now, i am writing under the assumption that we will be using the CANCoders instead of the NEO's built in ones
     public void setDesiredState(SwerveModuleState state, boolean loop){
         setSpeed(state, loop);
-        setAngle(state);
+        setAngle(state); 
     }
 
     public void resetToAbsolute(){ //resets the module's wheel to 0 degrees
@@ -93,7 +93,7 @@ public class SwerveModule {
         } 
   
     }
-
+    //.setReference will automatically make the motor move by calling on the SmartMotion class... dont ask me how that works though
     public void setAngle(SwerveModuleState state){ 
         Rotation2d angle = state.angle; //kPositions takes in amount of rotations
         angle_controller.setReference(getRotationsFromDegree(angle), ControlType.kPosition); //we're moving based off angular position, hence the control type
@@ -101,12 +101,12 @@ public class SwerveModule {
     
 
      public double getRotationsFromDegree(Rotation2d x){
-        double angle = x.getDegrees()/360; //absolute position
+        double angle = x.getDegrees() / 360; //absolute position -0.5 - 0.99
         if (angle < 0){ //to take shortest path back
-            return Rotation2d.fromRotations(angle * -16384.0).getRotations(); //max amount of rotations backwards
+            return Rotation2d.fromRotations(angle * -16384.0).getRotations(); //difference from the reference
         }
         else {
-            return Rotation2d.fromRotations(angle * 16383.0).getRotations(); //max amount of rotations forward
+            return Rotation2d.fromRotations(angle * 16383.0).getRotations(); //difference from the reference
         }
 
         
@@ -114,7 +114,7 @@ public class SwerveModule {
      public Rotation2d getRawRotations(){
         return Rotation2d.fromRotations(angle_encoder.getPosition().getValue());
      }
-     public Rotation2d getAbsoluteRotations(){
+     public Rotation2d getAbsoluteRotations(){ //absolute rotations will only count from -16384 - 16383
         return Rotation2d.fromRotations(angle_encoder.getAbsolutePosition().getValue());
      }
 

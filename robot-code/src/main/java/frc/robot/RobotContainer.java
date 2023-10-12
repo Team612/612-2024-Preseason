@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -22,10 +23,12 @@ import frc.robot.commands.Drivetrain.TrajectoryCreation;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Vision;
 import frc.robot.commands.Drivetrain.RunOnTheFly;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimator;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import frc.robot.commands.Drivetrain.FieldOrientedDrive;
 import frc.robot.commands.Drivetrain.FollowTrajectoryPathPlanner;
+import frc.robot.commands.Drivetrain.TurnTowardsObject;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -40,6 +43,7 @@ public class RobotContainer {
   
   //Drive subsystems declarations 
   private final Swerve m_swerve = Swerve.getInstance();
+  private final Limelight m_limelight = Limelight.getInstance();
   //private final Drivetrain m_drivetrain = Drivetrain.getInstance();
   private final DefaultDrive m_defaultdrive = new DefaultDrive(m_swerve);
 
@@ -52,6 +56,8 @@ public class RobotContainer {
   
   private final FieldOrientedDrive m_FieldOrientedDrive = new FieldOrientedDrive(m_swerve);
   public final Vision m_Vision = Vision.getVisionInstance();
+
+
 
 
 
@@ -71,7 +77,8 @@ public class RobotContainer {
 
   
 
-
+   
+  
   // private final SequentialCommandGroup m_RedTopScoreAndLeave = new SequentialCommandGroup(
   //   boop
   //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "RedTopLeave", Constants.DrivetrainConstants.constraint, true, false))
@@ -101,6 +108,7 @@ public class RobotContainer {
 
 
   private void configureShuffleBoardBindings(){
+    m_chooser.addOption("Auto-ALign", new TurnTowardsObject(m_swerve, m_limelight));
     // m_chooser.addOption("Auto-Balance", new DockingSequence(m_drivetrain));
     // m_chooser.addOption("Red Top Leave And Dock", new ProxyCommand(() -> m_RedTopLeaveAndDock));
     // m_chooser.addOption("Blue Top Leave And Dock", new ProxyCommand(() -> m_BlueTopLeaveAndDock));
