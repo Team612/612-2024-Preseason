@@ -27,6 +27,7 @@ public class TurnTowardsObject extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("running");
     if (m_limelight.getTv()){
       double angle = m_limelight.getTx();
       m_swerve.drive(0, 0, angle);
