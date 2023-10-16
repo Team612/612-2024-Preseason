@@ -1,6 +1,6 @@
 # install opencv "pip install opencv-python" 
 import cv2 
-folderpath = 'C:\\Users\\driver\\Desktop\\aryan\\612-2024-Preseason\\opencv\\images\\'
+folderpath = 'C:\\Users\\driver\\Desktop\\aryan\\612-2024-Preseason'
 # distance from camera to object(face) measured 
 # centimeter 
 Known_distance = 69
@@ -19,7 +19,7 @@ BLACK = (0, 0, 0)
 fonts = cv2.FONT_HERSHEY_COMPLEX 
 
 # face detector object 
-face_detector = cv2.CascadeClassifier(folderpath+"haarcascade_frontalface_default.xml") 
+face_detector = cv2.CascadeClassifier(folderpath+"\\opencv\\images\\haarcascade_frontalface_default.xml") 
 
 # focal length finder function 
 def Focal_Length_Finder(measured_distance, real_width, width_in_rf_image): 
@@ -62,7 +62,7 @@ def face_data(image):
 
 
 # reading reference_image from directory 
-ref_image = cv2.imread(folderpath+"face_image.jpg") 
+ref_image = cv2.imread(folderpath+"\\opencv\\images\\face_image.jpg") 
 
 # find the face width(pixels) in the reference_image 
 ref_image_face_width = face_data(ref_image) 
