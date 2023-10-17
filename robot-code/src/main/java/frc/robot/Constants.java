@@ -40,10 +40,10 @@ public final class Constants {
      public final static int SPARK_ANGLE_BL = 7;
      public final static int SPARK_ANGLE_BR = 8;
      //ENCODER VALUES
-     public final static int ENCODER_ANGLE_FL = 0;
-     public final static int ENCODER_ANGLE_FR = 1;
-     public final static int ENCODER_ANGLE_BL = 2;
-     public final static int ENCODER_ANGLE_BR = 3;
+     public final static int ENCODER_ANGLE_FL = 9;
+     public final static int ENCODER_ANGLE_FR = 10;
+     public final static int ENCODER_ANGLE_BL = 11;
+     public final static int ENCODER_ANGLE_BR = 12;
 
     //multipler for slowmo
     public static double slowmo = 1;

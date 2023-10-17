@@ -8,8 +8,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.Swerve;
+
 
 public class ShuffleBoardButtons {
     ShuffleboardTab m_driverTab;
@@ -61,7 +60,6 @@ public class ShuffleBoardButtons {
     public static GenericEntry toggleMittens;
 
     //subsystem
-    public Swerve m_swerve = Swerve.getInstance();
     public Limelight m_limelight = Limelight.getInstance();
 
     
@@ -124,17 +122,15 @@ public class ShuffleBoardButtons {
     }
 
     public void updateButtons(){
-        PoseEstimator poseEstimator = PoseEstimator.getPoseEstimatorInstance();
-        Pose2d estimator = poseEstimator.getCurrentPose();
+      
+ 
 
         
         tx.setDouble(m_limelight.getTx());
         ty.setDouble(m_limelight.getTy());
         ta.setDouble(m_limelight.getTa());
-        NavxAngle.setDouble(m_swerve.getNavxAngle().getDegrees());
-        PoseEstimatorAngle.setDouble(estimator.getRotation().getDegrees());
-        PoseEstimatorX.setDouble(estimator.getX());
-        PoseEstimatorY.setDouble(estimator.getY());
+       
+
         
     }
     

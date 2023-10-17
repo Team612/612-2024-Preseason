@@ -13,7 +13,7 @@ public class Limelight extends SubsystemBase {
   private static Limelight instance;
   /** Creates a new Limelight. */
   public Limelight() {
-    limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+    limelightTable = NetworkTableInstance.getDefault().getTable("limelight-sixtwel");
   }
   
 

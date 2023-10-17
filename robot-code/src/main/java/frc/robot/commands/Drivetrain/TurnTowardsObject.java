@@ -6,22 +6,21 @@ package frc.robot.commands.Drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Swerve;
 public class TurnTowardsObject extends CommandBase {
-  Swerve m_swerve;
+
   Limelight m_limelight;
   /** Creates a new TurnTowardsObject. */
-  public TurnTowardsObject(Swerve s, Limelight l) {
-    m_swerve = s;
+  public TurnTowardsObject(Limelight l) {
+
     m_limelight = l;
-    addRequirements(m_swerve);
+    addRequirements(m_limelight);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_swerve.resetWheelOrientation();
+  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,7 +29,8 @@ public class TurnTowardsObject extends CommandBase {
     System.out.println("running");
     if (m_limelight.getTv()){
       double angle = m_limelight.getTx();
-      m_swerve.drive(0, 0, angle);
+  
+      System.out.println(angle);
 
     }
   }

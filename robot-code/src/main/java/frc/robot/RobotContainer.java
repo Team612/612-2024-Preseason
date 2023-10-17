@@ -18,16 +18,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.EncoderConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Drivetrain.DefaultDrive;
-import frc.robot.commands.Drivetrain.TrajectoryCreation;
-import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Vision;
-import frc.robot.commands.Drivetrain.RunOnTheFly;
+
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.PoseEstimator;
+
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
-import frc.robot.commands.Drivetrain.FieldOrientedDrive;
-import frc.robot.commands.Drivetrain.FollowTrajectoryPathPlanner;
+
 import frc.robot.commands.Drivetrain.TurnTowardsObject;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -42,20 +37,19 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   
   //Drive subsystems declarations 
-  private final Swerve m_swerve = Swerve.getInstance();
+
   private final Limelight m_limelight = Limelight.getInstance();
   //private final Drivetrain m_drivetrain = Drivetrain.getInstance();
-  private final DefaultDrive m_defaultdrive = new DefaultDrive(m_swerve);
+
 
 
  // Trajectories
-  private final TrajectoryCreation m_traj = new TrajectoryCreation();
+
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   //Subsystems
   
-  private final FieldOrientedDrive m_FieldOrientedDrive = new FieldOrientedDrive(m_swerve);
-  public final Vision m_Vision = Vision.getVisionInstance();
+
 
 
 
@@ -67,7 +61,7 @@ public class RobotContainer {
 
   //public final Vision m_Vision = new Vision(camera);
 
-  public final PoseEstimator estimator = PoseEstimator.getPoseEstimatorInstance();
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -108,7 +102,7 @@ public class RobotContainer {
 
 
   private void configureShuffleBoardBindings(){
-    m_chooser.addOption("Auto-ALign", new TurnTowardsObject(m_swerve, m_limelight));
+    m_chooser.addOption("Auto-ALign", new TurnTowardsObject(m_limelight));
     // m_chooser.addOption("Auto-Balance", new DockingSequence(m_drivetrain));
     // m_chooser.addOption("Red Top Leave And Dock", new ProxyCommand(() -> m_RedTopLeaveAndDock));
     // m_chooser.addOption("Blue Top Leave And Dock", new ProxyCommand(() -> m_BlueTopLeaveAndDock));
@@ -122,7 +116,7 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
 
-    m_driverController.back().toggleOnTrue(m_defaultdrive);
+
 
    
 
@@ -137,20 +131,14 @@ public class RobotContainer {
 
   private void configureDefaultCommands(){
     //m_drivetrain.setDefaultCommand(m_FieldOrientedDrive);
-    m_swerve.setDefaultCommand(m_FieldOrientedDrive);
+
   
 
   }
 
   public void TeleopHeading(){
-    Rotation2d finalHeading = new Rotation2d(Units.degreesToRadians(-180));
-    Rotation2d currentHeading = m_swerve.getEstimatedRotations();
-    Rotation2d deltaHeading = finalHeading.minus(currentHeading);
-    if(Robot.initAllianceColor == Alliance.Blue){
-    m_swerve.setNavxAngleOffset(deltaHeading.plus(new Rotation2d(Units.degreesToRadians(180))));}
+
     
-    if(Robot.initAllianceColor == Alliance.Red){
-      m_swerve.setNavxAngleOffset(deltaHeading.plus(new Rotation2d(Units.degreesToRadians(0))));}
   }
   
   public Command getAutonomousCommand() {
