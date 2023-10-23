@@ -33,11 +33,10 @@ def Focal_Length_Finder(measured_distance, real_width, width_in_rf_image):
 	return focal_length 
 
 def Distance_finder(Focal_Length, real_face_width, face_width_in_frame): 
-
-	distance = (real_face_width * Focal_Length)/face_width_in_frame 
-
+        
+	distance = (real_face_width * Focal_Length)/face_width_in_frame     
 	# return the distance 
-	return distance 
+	return distance
 hsv = cv2.cvtColor(ref_image, cv2.COLOR_BGR2HSV) 
 lower_blue = np.array([110,50,50]) 
 upper_blue = np.array([130,255,255]) 
@@ -78,6 +77,9 @@ while True:
     c = cv2.waitKey(1)
     if c == 27:
         break
-
+# Actual Value = 30; Returned Value: 36
+# Actual Value = 40; Returned Value: 43
+# Actual Value = 50; Returned Value: 53
+# Actual Value = 60; Returned Value: 64
 cap.release()
 cv2.destroyAllWindows()
