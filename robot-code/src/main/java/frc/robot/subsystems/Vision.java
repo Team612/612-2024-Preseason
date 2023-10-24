@@ -144,12 +144,21 @@ public class Vision extends SubsystemBase {
     Pose2d tagPose = robotInTagPose;
     return new Pose2d().transformBy(new Transform2d(tagPose.getTranslation(), tagPose.getRotation()));
   }
+  
+  
+  public Transform3d getObjectPosition(){
+    return camera.getLatestResult().getBestTarget().getBestCameraToTarget();
+  }
+
+  public PhotonTrackedTarget getBestObject(){
+    return camera.getLatestResult().getBestTarget();
+  }
 
   public void resetRobotPose(){
     robotInTagPose = getTagPose();
   }
 
-  // return tag pose
+  // return the tag pose
   public Pose3d return_tag_pose(int id) {
     Optional<Pose3d> pose_of_tag = aprilTagFieldLayout.getTagPose(id);
     return pose_of_tag.get();
@@ -172,6 +181,7 @@ public class Vision extends SubsystemBase {
   public PhotonPoseEstimator getVisionPose(){
     return m_PoseEstimator;
   }
+
 
   @Override
   public void periodic() {
