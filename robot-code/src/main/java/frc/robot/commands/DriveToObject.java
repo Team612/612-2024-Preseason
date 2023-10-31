@@ -13,6 +13,11 @@ public class DriveToObject extends CommandBase {
   private Vision m_vision;
   private double speed = 0.3;
 
+  //switching pipelines
+  public void switchPipeline(Pipeline pip){
+    pip.switchPipeline();
+  }
+
   /** Creates a new DriveToObject. */
   public DriveToObject(Drivetrain drivetrain, Vision vision) {
     m_drivetrain = drivetrain;
