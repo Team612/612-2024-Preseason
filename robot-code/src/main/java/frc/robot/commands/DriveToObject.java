@@ -12,11 +12,11 @@ public class DriveToObject extends CommandBase {
   private Drivetrain m_drivetrain;
   private Vision m_vision;
   private double speed = 0.3;
+  private double angle_offset = 0;
 
-  //switching pipelines
-  public void switchPipeline(Pipeline pip){
-    pip.switchPipeline();
-  }
+ 
+
+  
 
   /** Creates a new DriveToObject. */
   public DriveToObject(Drivetrain drivetrain, Vision vision) {
@@ -27,8 +27,12 @@ public class DriveToObject extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    double angle_offset = m_drivetrain.getYaw() - m_vision.getBestObject().getYaw(); // angle offset of object to robot, need to turn to left until yaw is close to angle offset
-    m_drivetrain.driveMecanum(0, 0, 0, 0);
+    m_vision.setPipeline(3); //whatever pipeline to use
+    if (m_vision.hasBestTarget()){
+      angle_offset = m_drivetrain.getYaw() - m_vision.getBestObject().getYaw(); // angle offset of object to robot, need to turn to left until yaw is close to angle offset
+      m_drivetrain.driveMecanum(0, 0, 0, 0);
+    }
+  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,12 +45,17 @@ public class DriveToObject extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_vision.setPipeline(0);
     m_drivetrain.driveMecanum(0, 0, 0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (!m_vision.hasBestTarget()){
+      return true;
+    }
+
     return (m_vision.getObjectPosition().getX() < 5 ); // if finished, return true or false
 }
 }

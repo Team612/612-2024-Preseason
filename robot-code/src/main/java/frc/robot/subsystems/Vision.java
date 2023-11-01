@@ -24,6 +24,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.networktables.NetworkTableInstance;
 // import frc.robot.Constants;
 import frc.robot.Constants;
 public class Vision extends SubsystemBase {
@@ -32,7 +33,7 @@ public class Vision extends SubsystemBase {
   public PhotonPoseEstimator m_PoseEstimator;
 
   static Vision visionInstance = null;
-
+  
   PhotonCamera camera;
 
   private Pose2d robotInTagPose;
@@ -138,6 +139,25 @@ public class Vision extends SubsystemBase {
       return new Pose2d(tagSpace.getX(), tagSpace.getY(), new Rotation2d( (bestTarget.getYaw()) * (Math.PI/180)) );
     }
     return new Pose2d();
+  }
+
+    //set pipeline
+    //pre: 0-9
+  public void setPipeline(Integer pipeline) {
+    if(pipeline<0){
+        pipeline = 0;
+    }else if(pipeline>9){
+        pipeline = 9;
+    }
+    camera.setPipelineIndex(pipeline);
+}
+
+  public boolean hasBestTarget(){
+    if (camera.getLatestResult().hasTargets())
+      return true;
+    return false;
+
+
   }
 
   public Pose2d getRobotPose(){
