@@ -33,11 +33,11 @@ public class SwerveModule {
      Constants.SwerveConstants.kV,
       Constants.SwerveConstants.kA); 
 
-    public SwerveModule(int n, int port_motor,int port_angle, int port_encoder, MotorType t){
+    public SwerveModule(int n, int port_motor,int port_angle, MotorType t){
         moduleNumber = n;
         drive_motor = new CANSparkMax(port_motor, t);
         angle_motor = new CANSparkMax(port_angle, t);
-        angle_encoder = new CANcoder(port_encoder);
+       // angle_encoder = new CANcoder(port_encoder);
         module_position = new SwerveModulePosition(); //keeps track of the modules angle and meters traveled
         integrated_angle_encoder = angle_motor.getEncoder();
 
@@ -62,24 +62,25 @@ public class SwerveModule {
     }
 
     public void configureEncoders(){
-        integrated_angle_encoder.setPositionConversionFactor(Constants.SwerveConstants.angleConversionFactor);
+        //integrated_angle_encoder.setPositionConversionFactor(Constants.SwerveConstants.angleConversionFactor); //degrees per pulse
         drive_motor.getEncoder().setPositionConversionFactor(Constants.SwerveConstants.distancePerPulse);
         drive_motor.getEncoder().setVelocityConversionFactor(Constants.SwerveConstants.distancePerPulse / 60); //rps
         drive_motor.getEncoder().setInverted(false);
         angle_motor.getEncoder().setInverted(false);
         integrated_angle_encoder.setInverted(false);
+        
     }
 
 
     
-    //as of right now, i am writing under the assumption that we will be using the CANCoders instead of the NEO's built in ones
+  
     public void setDesiredState(SwerveModuleState state, boolean loop){
         setSpeed(state, loop);
         setAngle(state);
     }
 
-    public void resetToAbsolute(){ //resets the module's wheel to 0 degrees
-       integrated_angle_encoder.setPosition(0 - getRawRotations().getRotations());
+    public void resetToAbsolute(){ //resets the module's wheel to 0 degrees. Chcek this later
+       integrated_angle_encoder.setPosition(0);
     }
 
     public void setSpeed(SwerveModuleState state, boolean isOpenLoop){
@@ -100,28 +101,32 @@ public class SwerveModule {
      } 
     
 
-     public double getRotationsFromDegree(Rotation2d x){
-        double angle = x.getDegrees()/360; //absolute position
+     public double getRotationsFromDegree(Rotation2d x){ //Assuming a 8.14:1 gear rato
+        double angle = x.getDegrees() % 360; //reference angle
         if (angle < 0){ //to take shortest path back
-            return Rotation2d.fromRotations(angle * -16384.0).getRotations(); //max amount of rotations backwards
+            return Rotation2d.fromRotations(angle * -Constants.SwerveConstants.angleConversionFactor).getRotations(); //max amount of rotations backwards -16384.0
         }
         else {
-            return Rotation2d.fromRotations(angle * 16383.0).getRotations(); //max amount of rotations forward
+            return Rotation2d.fromRotations(angle * Constants.SwerveConstants.angleConversionFactor).getRotations(); //max amount of rotations forward 16383.0
         }
 
         
      }
-     public Rotation2d getRawRotations(){
-        return Rotation2d.fromRotations(angle_encoder.getPosition().getValue());
+     public Rotation2d getRawRotations(){//lets assume it takes 8.14 rotations of the Neo Motor for 1 rotation
+        //return Rotation2d.fromRotations(angle_encoder.getPosition().getValue());
+        return Rotation2d.fromRotations(integrated_angle_encoder.getPosition());
      }
-     public Rotation2d getAbsoluteRotations(){
-        return Rotation2d.fromRotations(angle_encoder.getAbsolutePosition().getValue());
+     public Rotation2d getAbsoluteRotations(){ //lets assume it takes 8.14 rotations of the Neo Motor for 1 rotation
+        //return Rotation2d.fromRotations(angle_encoder.getAbsolutePosition().getValue());
+        return Rotation2d.fromRotations((integrated_angle_encoder.getPosition() % Constants.SwerveConstants.gearRatio)/ Constants.SwerveConstants.gearRatio);
      }
+
 
      public Rotation2d getDegrees(){
         double angle = 360 * getAbsoluteRotations().getRotations(); //gets the number of rotations (-0.5,0.99) and multiplies it by 360 to get current angle
         return Rotation2d.fromDegrees(angle);
      }
+
 
      public SwerveModulePosition getPositionObject(){
         return module_position;

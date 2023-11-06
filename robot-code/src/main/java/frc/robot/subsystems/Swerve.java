@@ -56,17 +56,21 @@ public class Swerve extends SubsystemBase {
 
 
     //SwerveModule initalization
-    SwerveModules[0] = new SwerveModule(1, Constants.DrivetrainConstants.SPARK_FL, Constants.DrivetrainConstants.SPARK_ANGLE_FL, Constants.DrivetrainConstants.ENCODER_ANGLE_FL,MotorType.kBrushless); //fl
-    SwerveModules[1] = new SwerveModule(2, Constants.DrivetrainConstants.SPARK_FR, Constants.DrivetrainConstants.SPARK_ANGLE_FR,Constants.DrivetrainConstants.ENCODER_ANGLE_FR, MotorType.kBrushless); //fr
-    SwerveModules[2] = new SwerveModule(3, Constants.DrivetrainConstants.SPARK_BL, Constants.DrivetrainConstants.SPARK_ANGLE_BL,Constants.DrivetrainConstants.ENCODER_ANGLE_BL, MotorType.kBrushless); //bl
-    SwerveModules[3] = new SwerveModule(4, Constants.DrivetrainConstants.SPARK_BR, Constants.DrivetrainConstants.SPARK_ANGLE_BR,Constants.DrivetrainConstants.ENCODER_ANGLE_BR,  MotorType.kBrushless); //br
+    //0 = fl
+    //1 = fr
+    //2 = bl
+    //3 = br
+    SwerveModules[0] = new SwerveModule(0, Constants.DrivetrainConstants.SPARK_FL, Constants.DrivetrainConstants.SPARK_ANGLE_FL,MotorType.kBrushless); //fl
+    SwerveModules[1] = new SwerveModule(1, Constants.DrivetrainConstants.SPARK_FR, Constants.DrivetrainConstants.SPARK_ANGLE_FR, MotorType.kBrushless); //fr
+    SwerveModules[2] = new SwerveModule(2, Constants.DrivetrainConstants.SPARK_BL, Constants.DrivetrainConstants.SPARK_ANGLE_BL, MotorType.kBrushless); //bl
+    SwerveModules[3] = new SwerveModule(3, Constants.DrivetrainConstants.SPARK_BR, Constants.DrivetrainConstants.SPARK_ANGLE_BR,  MotorType.kBrushless); //br
 
     swerve_position = new SwerveModulePosition[]{SwerveModules[0].getPositionObject(),SwerveModules[1].getPositionObject(),SwerveModules[2].getPositionObject(),SwerveModules[3].getPositionObject()};
     poseEstimator = new PoseEstimator();
   }
 
 
-  public void drive(double x, double y, double angle){ //Swerve comes with its own code for field relative pos
+  public void drive(double x, double y, double angle){ //For the entire motor
     ChassisSpeeds speed = new ChassisSpeeds(x,y,angle);
     SwerveModuleState[] moduleStates = swerve_kinemtics.toSwerveModuleStates(speed);
 
@@ -77,6 +81,16 @@ public class Swerve extends SubsystemBase {
   
 
 
+  }
+
+  public void drive(double x, double y, double angle, int motor){ //for individual motors
+    ChassisSpeeds speed = new ChassisSpeeds(x,y,angle);
+    SwerveModuleState[] moduleStates = swerve_kinemtics.toSwerveModuleStates(speed);
+    for (SwerveModule mod : SwerveModules){
+      if (mod.getModuleNumber() == motor){
+        mod.setDesiredState(moduleStates[mod.getModuleNumber()], true);
+      }
+    }
   }
 
   public void resetWheelOrientation(){
@@ -99,8 +113,16 @@ public class Swerve extends SubsystemBase {
     navx.setAngleAdjustment(offset.getDegrees());
   }
 
-  public Rotation2d getEstimatedRotations(){
+  public Rotation2d getEstimatedRobotRotations(){
     return poseEstimator.getCurrentPose().getRotation();
+  }
+
+  public Rotation2d getModularRawRotations(int num){
+    return SwerveModules[num].getRawRotations();
+  }
+
+  public Rotation2d getModularAbsoluteRotations(int num){
+    return SwerveModules[num].getAbsoluteRotations();
   }
 
   public Supplier<Pose2d> getRobotPosition(){
@@ -122,6 +144,7 @@ public class Swerve extends SubsystemBase {
     poseEstimator.resetPose();
     
   }
+  
 
   public static SwerveControllerCommand runTrajectory(Swerve s_swerve, PathPlannerTrajectory path){
     ProfiledPIDController thetaController = new ProfiledPIDController(Constants.SwerveConstants.kP,

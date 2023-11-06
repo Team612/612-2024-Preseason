@@ -136,7 +136,7 @@ public class RobotContainer {
 
   public void TeleopHeading(){
     Rotation2d finalHeading = new Rotation2d(Units.degreesToRadians(-180));
-    Rotation2d currentHeading = m_swerve.getEstimatedRotations();
+    Rotation2d currentHeading = m_swerve.getEstimatedRobotRotations();
     Rotation2d deltaHeading = finalHeading.minus(currentHeading);
     if(Robot.initAllianceColor == Alliance.Blue){
     m_swerve.setNavxAngleOffset(deltaHeading.plus(new Rotation2d(Units.degreesToRadians(180))));}

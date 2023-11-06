@@ -2,6 +2,8 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
+import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -22,6 +24,8 @@ public class ShuffleBoardButtons {
     GenericEntry PoseEstimatorAngle;
     GenericEntry PoseEstimatorX;
     GenericEntry PoseEstimatorY;
+    GenericEntry Rotations;
+    GenericEntry AbsoluteRotations;
     GenericEntry fodState;
     // GenericEntry grabberCurrentGraph;
     GenericEntry telescopeCurrentGraph;
@@ -73,6 +77,8 @@ public class ShuffleBoardButtons {
         PoseEstimatorAngle = m_debugTab.add("PoseEstimator Angle", 0.0).getEntry();
         PoseEstimatorX = m_debugTab.add("PoseEstimator X", 0.0).getEntry();
         PoseEstimatorY = m_debugTab.add("PoseEstimator Y", 0.0).getEntry();
+        Rotations = m_debugTab.add("Raw Rotations",0.0).getEntry();
+        AbsoluteRotations = m_debugTab.add("Absolute Rotations",0.0).getEntry();
         isBlueAlliance = m_debugTab.add("isBlueAlliance", false).getEntry();
 
 
@@ -113,6 +119,7 @@ public class ShuffleBoardButtons {
 
     public void updateButtons(){
         PoseEstimator poseEstimator = PoseEstimator.getPoseEstimatorInstance();
+        Swerve swerve = Swerve.getInstance();
         Pose2d estimator = poseEstimator.getCurrentPose();
 
 
@@ -121,6 +128,8 @@ public class ShuffleBoardButtons {
         PoseEstimatorAngle.setDouble(estimator.getRotation().getDegrees());
         PoseEstimatorX.setDouble(estimator.getX());
         PoseEstimatorY.setDouble(estimator.getY());
+        Rotations.setDouble(swerve.getModularRawRotations(0).getRotations());
+        AbsoluteRotations.setDouble(swerve.getModularAbsoluteRotations(0).getRotations());
         
     }
     
