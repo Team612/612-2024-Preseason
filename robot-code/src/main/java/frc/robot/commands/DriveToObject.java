@@ -7,8 +7,8 @@ package frc.robot.commands;
 import org.photonvision.PhotonUtils;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Vision;
 
 public class DriveToObject extends CommandBase {
   private Drivetrain m_drivetrain;
@@ -26,6 +26,7 @@ public class DriveToObject extends CommandBase {
   public DriveToObject(Drivetrain drivetrain, Vision vision) {
     m_drivetrain = drivetrain;
     m_vision = vision;
+    addRequirements(m_drivetrain, m_vision);
   }
 
   // Called when the command is initially scheduled.
@@ -43,6 +44,7 @@ public class DriveToObject extends CommandBase {
     if (!m_vision.hasBestTarget()){
       System.out.println(timer);
       timer++;
+      speed = 0;
     }
     else {
     System.out.println(m_vision.getObjectPosition().getX());
@@ -53,8 +55,9 @@ public class DriveToObject extends CommandBase {
     }
     //System.out.println(m_vision.hasBestTarget());
     angle_offset =  m_vision.getObjectPosition().getY();
-    m_drivetrain.driveMecanum(speed, speed, speed, speed);
+    speed = 0.3;
     }
+    m_drivetrain.driveMecanum(speed, speed, speed, speed);
   }
 
   // Called once the command ends or is interrupted.
@@ -74,4 +77,19 @@ public class DriveToObject extends CommandBase {
     
     return (range < 1); // if finished, return true or false IN METERS
 }
+
+//calculate Rotation
+// private double calculateRotation() {
+//   if (m_vision.hasBestTarget()) {
+//     double targetYaw = m_vision.getBestObject().getYaw();
+//     double currentYaw = m_drivetrain.getYaw();
+    
+//     // Calculate the desired rotation based on the difference in yaw angles.
+//     double rotation = targetYaw - currentYaw;
+    
+//     return rotation;
+//   } else {
+//     return 0; // No rotation needed if no valid target is detected.
+//   }
+// }
 }
