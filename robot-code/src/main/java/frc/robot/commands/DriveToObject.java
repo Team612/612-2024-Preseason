@@ -73,7 +73,7 @@ public class DriveToObject extends CommandBase {
         doneTurning = true;
       }
 
-      m_drivetrain.turn(rotationvalue);
+      //m_drivetrain.turn(rotationvalue,angle_offset);
     }
     else{
     //System.out.println(m_vision.hasBestTarget());
@@ -87,7 +87,7 @@ public class DriveToObject extends CommandBase {
 
     m_drivetrain.driveMecanum(speed, speed, speed, speed);
   }
-  m_drivetrain.turn(50);
+    m_drivetrain.turn(0.5,angle_offset);
     //m_drivetrain.driveMecanum(speed, speed, speed, speed);
   }
 
