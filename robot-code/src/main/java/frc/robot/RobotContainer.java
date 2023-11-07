@@ -17,10 +17,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.EncoderConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.LedCommands.LedMed;
 import frc.robot.LedCommands.Purple;
 import frc.robot.LedCommands.TeleopDefault;
 import frc.robot.LedCommands.Yellow;
 import frc.robot.commands.Drivetrain.AutoBalance;
+// import frc.robot.commands.Drivetrain.AutoDriveThingy;
 import frc.robot.commands.Drivetrain.Boop;
 import frc.robot.commands.Drivetrain.DefaultDrive;
 import frc.robot.commands.Drivetrain.DockingSequence;
@@ -108,7 +110,11 @@ public class RobotContainer {
     andThen(new ExtendToPosition(m_scope, 0.7, EncoderConstants.HumanStationIntakeTele))).
     until(() -> Math.abs(ControlMap.gunner_joystick.getRawAxis(1)) >= 0.1 || ControlMap.GUNNER_RB.getAsBoolean() || ControlMap.GUNNER_LB.getAsBoolean());
 
-      
+
+    
+  private final Command testLed = new LedMed(m_Led, 100);
+  // private final Command testLede = new LedMed(m_Led, 100);
+  // private final Command testLede = new;
     // private final SequentialCommandGroup m_highCone = new SequentialCommandGroup(
     //   new ExtendToPosition(m_scope, 0.7, 0).
     //   andThen(new MoveToPosition(m_arm, 0.7, EncoderConstants.HighPositionCubePivot)).
@@ -165,7 +171,13 @@ public class RobotContainer {
     .andThen(new DockingSequence(m_drivetrain))
   );
 
-  // private final SequentialCommandGroup m_RedTopScoreAndLeave = new SequentialCommandGroup(
+  // private final SequentialCommandGroup m_RomiRoutine = new SequentialCommandGroup(
+  //    boop.andThen(new AutoDriveThingy(m_drivetrain))
+  //    .andThen(new AutoTurnThingy(m_drivetrain))
+  //    .andThen(new AutoDriveThingy(m_drivetrain))
+  //    .andThen(new AutoTurnThingy(m_drivetrain))
+  // );
+  // // private final SequentialCommandGroup m_RedTopScoreAndLeave = new SequentialCommandGroup(
   //   boop
   //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "RedTopLeave", Constants.DrivetrainConstants.constraint, true, false))
   // );
@@ -206,6 +218,7 @@ public class RobotContainer {
     m_chooser.addOption("Blue Middle Leave and Dock", new SequentialCommandGroup(new Boop(m_scope, m_arm).andThen(new ProxyCommand(() -> m_BlueMiddleLeaveAndDock))));
     
     m_chooser.addOption("auto score cone", m_autoScore);
+    m_chooser.addOption("Ambulance Lights", testLed);
     // m_chooser.addOption("Red Top Leave And Dock", new ProxyCommand(() -> m_RedTopLeaveAndDock));
     // m_chooser.addOption("Blue Top Leave And Dock", new ProxyCommand(() -> m_BlueTopLeaveAndDock));
     // m_chooser.addOption("Red Bottom Leave And Dock", new ProxyCommand(() -> m_RedBottomLeaveAndDock));
