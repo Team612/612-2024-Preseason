@@ -10,11 +10,11 @@ import frc.robot.subsystems.led;
 public class MakeTheRainbow extends CommandBase {
   /** Creates a new LedMed. */
   private final led m_led;
-  private final int woahs;
+  // private final int woahs;
   // private final led m_ledBuffer;
   private int counter;
-  public MakeTheRainbow(led led, int woah) {
-    woahs = woah;
+  public MakeTheRainbow(led led) {
+    // woahs = woah;
     m_led = led;
     addRequirements(led);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -23,6 +23,7 @@ public class MakeTheRainbow extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_led.resetled();
     counter = 0;
   }
 
@@ -30,6 +31,7 @@ public class MakeTheRainbow extends CommandBase {
   @Override
   public void execute() {
     m_led.CycleThroughTheRainbow();
+    counter++;
   }
 
   // Called once the command ends or is interrupted.

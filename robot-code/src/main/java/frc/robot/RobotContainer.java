@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.EncoderConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.LedCommands.LedMed;
+import frc.robot.LedCommands.MakeTheRainbow;
 import frc.robot.LedCommands.Purple;
 import frc.robot.LedCommands.TeleopDefault;
 import frc.robot.LedCommands.Yellow;
@@ -113,6 +114,7 @@ public class RobotContainer {
 
     
   private final Command testLed = new LedMed(m_Led, 100);
+  private final Command testled2 = new MakeTheRainbow(m_Led);
   // private final Command testLede = new LedMed(m_Led, 100);
   // private final Command testLede = new;
     // private final SequentialCommandGroup m_highCone = new SequentialCommandGroup(
@@ -219,6 +221,7 @@ public class RobotContainer {
     
     m_chooser.addOption("auto score cone", m_autoScore);
     m_chooser.addOption("Ambulance Lights", testLed);
+    m_chooser.addOption("rainbow", testled2);
     // m_chooser.addOption("Red Top Leave And Dock", new ProxyCommand(() -> m_RedTopLeaveAndDock));
     // m_chooser.addOption("Blue Top Leave And Dock", new ProxyCommand(() -> m_BlueTopLeaveAndDock));
     // m_chooser.addOption("Red Bottom Leave And Dock", new ProxyCommand(() -> m_RedBottomLeaveAndDock));

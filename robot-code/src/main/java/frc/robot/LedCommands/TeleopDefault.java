@@ -35,7 +35,7 @@ public class TeleopDefault extends CommandBase {
     }else{
       if(Robot.initAllianceColor == Alliance.Blue) m_led.setLed(0, 0, 255);
       else if(Robot.initAllianceColor == Alliance.Red) m_led.setLed(255, 0, 0);
-      m_led.ChantillyTheme();
+    
     }
 
   }
