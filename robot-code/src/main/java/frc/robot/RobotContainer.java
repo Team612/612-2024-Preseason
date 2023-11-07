@@ -37,7 +37,6 @@ import frc.robot.commands.Drivetrain.RunOnTheFly;
 import frc.robot.commands.Grab;
 import frc.robot.commands.Pivot;
 import frc.robot.commands.Release;
-import frc.robot.commands.DriveToObject;
 import frc.robot.commands.ExtendRetract;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Grabber;
@@ -49,6 +48,8 @@ import frc.robot.commands.Drivetrain.FollowTrajectoryPathPlanner;
 import frc.robot.commands.PivotPositions.DefenseMode;
 import frc.robot.commands.PivotPositions.ExtendToPosition;
 import frc.robot.commands.ReleaseAuto;
+import frc.robot.commands.Autonomous.DriveToObject;
+import frc.robot.commands.Autonomous.TurnToObject;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -110,6 +111,10 @@ public class RobotContainer {
     new MoveToPosition(m_arm, 0.7, EncoderConstants.HumanStationIntakePivot).
     andThen(new ExtendToPosition(m_scope, 0.7, EncoderConstants.HumanStationIntakeTele))).
     until(() -> Math.abs(ControlMap.gunner_joystick.getRawAxis(1)) >= 0.1 || ControlMap.GUNNER_RB.getAsBoolean() || ControlMap.GUNNER_LB.getAsBoolean());
+
+  //TEST AUTONOMOUS
+  private final Command m_driveObject = new SequentialCommandGroup(new TurnToObject(m_drivetrain, m_Vision)
+  .andThen(new TurnToObject(m_drivetrain, m_Vision))); //Note, test this as a parralelCommandGroup later
 
       
     // private final SequentialCommandGroup m_highCone = new SequentialCommandGroup(
@@ -209,7 +214,7 @@ public class RobotContainer {
     m_chooser.addOption("Blue Middle Leave and Dock", new SequentialCommandGroup(new Boop(m_scope, m_arm).andThen(new ProxyCommand(() -> m_BlueMiddleLeaveAndDock))));
     
     m_chooser.addOption("auto score cone", m_autoScore);
-    m_chooser.addOption("drive to obj", m_DTO);
+    m_chooser.addOption("drive to obj", m_driveObject);
     // m_chooser.addOption("Red Top Leave And Dock", new ProxyCommand(() -> m_RedTopLeaveAndDock));
     // m_chooser.addOption("Blue Top Leave And Dock", new ProxyCommand(() -> m_BlueTopLeaveAndDock));
     // m_chooser.addOption("Red Bottom Leave And Dock", new ProxyCommand(() -> m_RedBottomLeaveAndDock));

@@ -134,14 +134,8 @@ public class Drivetrain extends SubsystemBase {
     // System.out.println("******************************************" + navxAngleOffset + "**************************************");
   }
 
-  public void turn(double rotation, double obj_angle){
-    double currentAngle = getNavxAngle().getDegrees() - obj_angle;
-    if (currentAngle < 2 && currentAngle > -2){
-    drivetrain.driveCartesian(0,0,0);
-    }
-    else{
+  public void turn(double rotation){
       drivetrain.driveCartesian(0, 0, rotation);
-    }
   }
   
   //For setting individual speeds to each motor
