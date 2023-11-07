@@ -123,6 +123,17 @@ public class Vision extends SubsystemBase {
     return visionInstance;
   }
 
+  public void cameraresult(Drivetrain m_drivetrain){
+    var result = camera.getLatestResult();
+    boolean hasTargets = result.hasTargets();
+    PhotonTrackedTarget target = result.getBestTarget();
+    if(hasTargets == true){
+      m_drivetrain.driveMecanum(0.3, 0.3, 0.3, 0.3);
+    }
+    System.out.println(hasTargets);
+    // return result;
+  }
+
   public PhotonCamera getCamera() {
     return camera;
   }
