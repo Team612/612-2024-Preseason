@@ -133,6 +133,10 @@ public class Drivetrain extends SubsystemBase {
     drivetrain.driveCartesian(x, y, zRotation, getNavxAngle().unaryMinus().minus(navxAngleOffset.unaryMinus()));
     // System.out.println("******************************************" + navxAngleOffset + "**************************************");
   }
+
+  public void turn(double rotation){
+    drivetrain.driveCartesian(0,0,rotation);
+  }
   
   //For setting individual speeds to each motor
   
@@ -142,6 +146,7 @@ public class Drivetrain extends SubsystemBase {
     spark_fr.set(fr);
     spark_br.set(br);
   }
+
 
   //For setting individual volts to each motor
 

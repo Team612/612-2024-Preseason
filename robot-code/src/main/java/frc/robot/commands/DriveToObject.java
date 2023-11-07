@@ -6,7 +6,13 @@ package frc.robot.commands;
 
 import org.photonvision.PhotonUtils;
 
+import com.pathplanner.lib.auto.PIDConstants;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 
@@ -14,9 +20,13 @@ public class DriveToObject extends CommandBase {
   private Drivetrain m_drivetrain;
   private Vision m_vision;
   private double speed = 0.3;
+  private boolean doneTurning = false;
   private double angle_offset = 0;
+  private double rotationvalue = 0;
   private int timer = 0;
   private boolean runOnce = false;
+  private double range = 0.0;
+  private PIDController turnController;
 
  
 
@@ -26,6 +36,7 @@ public class DriveToObject extends CommandBase {
   public DriveToObject(Drivetrain drivetrain, Vision vision) {
     m_drivetrain = drivetrain;
     m_vision = vision;
+    turnController = new PIDController(Constants.DrivetrainConstants.kPThetaController, 0, 0);
     addRequirements(m_drivetrain, m_vision);
   }
 
@@ -41,23 +52,44 @@ public class DriveToObject extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    Rotation2d currentAngle = m_drivetrain.getNavxAngle();
+
     if (!m_vision.hasBestTarget()){
       System.out.println(timer);
       timer++;
       speed = 0;
     }
     else {
-    System.out.println(m_vision.getObjectPosition().getX());
     timer = 0;
-    if (!runOnce){
-      angle_offset = m_drivetrain.getYaw() - m_vision.getBestObject().getYaw(); // angle offset of object to robot, need to turn to left until yaw is close to angle offset
+    if (!runOnce && m_vision.hasBestTarget()){
+      angle_offset = m_vision.getBestObject().getYaw(); // angle offset of object to robot, need to turn to left until yaw is close to angle offset
       runOnce = true;
     }
-    //System.out.println(m_vision.hasBestTarget());
-    angle_offset =  m_vision.getObjectPosition().getY();
-    speed = 0.3;
+    
+    if (!doneTurning){
+      angle_offset = m_vision.getBestObject().getYaw();
+      rotationvalue = -turnController.calculate(m_vision.getBestObject().getYaw(), 0);
+      if (angle_offset < 2 && angle_offset > -2){
+        doneTurning = true;
+      }
+
+      m_drivetrain.turn(rotationvalue);
     }
+    else{
+    //System.out.println(m_vision.hasBestTarget());
+    angle_offset =  currentAngle.getDegrees() - m_vision.getBestObject().getYaw();
+     speed = 0.3;
+    rotationvalue = turnController.calculate(m_vision.getBestObject().getYaw(), 0);
+
+    }
+
+
+    
+
     m_drivetrain.driveMecanum(speed, speed, speed, speed);
+  }
+    
+    //m_drivetrain.driveMecanum(speed, speed, speed, speed);
   }
 
   // Called once the command ends or is interrupted.
@@ -70,12 +102,16 @@ public class DriveToObject extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    double range = PhotonUtils.calculateDistanceToTargetMeters(0.508, 0.1651, m_vision.getBestObject().getYaw(), m_vision.getBestObject().getPitch());
+    if(m_vision.hasBestTarget()){
+      range = PhotonUtils.calculateDistanceToTargetMeters(0.508, 0.1651, Units.degreesToRadians(m_vision.getBestObject().getYaw()), Units.degreesToRadians(m_vision.getBestObject().getPitch()));
+    
     if (timer/20 > 10)
       return true;
     
     
-    return (range < 1); // if finished, return true or false IN METERS
+    return (range < 1);
+    }
+    return false; // if finished, return true or false IN METERS
 }
 
 //calculate Rotation
