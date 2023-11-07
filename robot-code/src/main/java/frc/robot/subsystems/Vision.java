@@ -29,6 +29,7 @@ import frc.robot.Constants;
 public class Vision extends SubsystemBase {
   private static AprilTagFieldLayout aprilTagFieldLayout;
   private static Transform3d robotToCam;
+  double yaw;
   public PhotonPoseEstimator m_PoseEstimator;
 
   static Vision visionInstance = null;
@@ -129,6 +130,13 @@ public class Vision extends SubsystemBase {
     PhotonTrackedTarget target = result.getBestTarget();
     if(hasTargets == true){
       m_drivetrain.driveMecanum(0.3, 0.3, 0.3, 0.3);
+      yaw = target.getYaw();
+      if(yaw>0){
+        m_drivetrain.driveMecanum(-0.3, -0.3, 0.3, 0.3);
+      }
+      else{
+        m_drivetrain.driveMecanum(0.3, 0.3, -0.3, -0.3);
+      }
     }
     System.out.println(hasTargets);
     // return result;
