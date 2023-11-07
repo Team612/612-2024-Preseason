@@ -13,6 +13,34 @@ public class led extends SubsystemBase {
   private AddressableLEDBuffer m_ledBuffer;
   private Timer timer;
   static led LEDInstance = null;
+  int RedRed = 255;
+  int RedGreen = 0;
+  int RedBlue = 0;
+
+
+  int OrangeRed = 255;
+  int OrangeGreen = 127;
+  int OrangeBlue = 0;
+
+
+  int YellowRed = 255;
+  int YellowGreen = 255;
+  int YellowBlue = 0;
+
+
+  int GreenRed = 0;
+  int GreenGreen = 255;
+  int GreenBlue = 0;
+
+
+  int BlueRed = 0;
+  int BlueGreen = 0;
+  int BlueBlue = 255;
+
+
+  int PurpleRed = 75;
+  int PurpleGreen = 0;
+  int PurpleBlue = 130;
 
   /** Creates a new led. */
   public led() {
@@ -41,6 +69,31 @@ public class led extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
+  public void setIndividalLed(int i, int r, int g, int b){
+    m_ledBuffer.setRGB(i, r, g, b);
+    m_led.setData(m_ledBuffer);
+  }
+
+  public void CycleThroughTheRainbow(){
+    for (var i = 0; i < m_ledBuffer.getLength()/6; i++) {
+      m_ledBuffer.setRGB(i, RedRed, RedGreen, RedBlue);
+    }
+    for (var i = m_ledBuffer.getLength()/6;  i < m_ledBuffer.getLength()/3; i++) {
+      m_ledBuffer.setRGB(i, OrangeRed, OrangeGreen, OrangeBlue);
+    }
+    for (var i = m_ledBuffer.getLength()/3; i < m_ledBuffer.getLength()/2; i++) {
+      m_ledBuffer.setRGB(i, YellowRed, YellowGreen, YellowBlue);
+    }
+    for (var i = m_ledBuffer.getLength()/2; i < 2*m_ledBuffer.getLength()/3; i++) {
+      m_ledBuffer.setRGB(i, GreenRed, GreenGreen, GreenBlue);
+    }
+    for (var i = 2*m_ledBuffer.getLength()/3; i < 5*m_ledBuffer.getLength()/6; i++) {
+      m_ledBuffer.setRGB(i, BlueRed, BlueGreen, BlueBlue);
+    }
+    for (var i = 5*m_ledBuffer.getLength()/6; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, PurpleRed, PurpleGreen, PurpleBlue);
+    }
+  }
   public void yellow(){
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       m_ledBuffer.setRGB(i, 255, 255, 0);
