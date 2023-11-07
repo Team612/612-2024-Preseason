@@ -62,7 +62,7 @@ public class DriveToObject extends CommandBase {
     else {
     timer = 0;
     if (!runOnce && m_vision.hasBestTarget()){
-      angle_offset = m_vision.getBestObject().getYaw(); // angle offset of object to robot, need to turn to left until yaw is close to angle offset
+      angle_offset = m_vision.getBestObject().getYaw(); // not rly angleoffset but just angle placeholder
       runOnce = true;
     }
     
@@ -79,7 +79,6 @@ public class DriveToObject extends CommandBase {
     //System.out.println(m_vision.hasBestTarget());
     angle_offset =  currentAngle.getDegrees() - m_vision.getBestObject().getYaw();
      speed = 0.3;
-    rotationvalue = turnController.calculate(m_vision.getBestObject().getYaw(), 0);
 
     }
 
@@ -88,7 +87,7 @@ public class DriveToObject extends CommandBase {
 
     m_drivetrain.driveMecanum(speed, speed, speed, speed);
   }
-    
+  m_drivetrain.turn(50);
     //m_drivetrain.driveMecanum(speed, speed, speed, speed);
   }
 
