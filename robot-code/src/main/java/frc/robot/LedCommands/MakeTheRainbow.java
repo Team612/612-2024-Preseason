@@ -42,6 +42,9 @@ public class MakeTheRainbow extends CommandBase {
     if(m_spin){
       m_drivetrain.driveMecanum(0.3,0.3,0,0);
     }
+    else{
+      m_drivetrain.driveMecanum(0,0,0,0);
+    }
   
   }
 
