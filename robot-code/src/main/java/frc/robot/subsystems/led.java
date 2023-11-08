@@ -54,6 +54,36 @@ public class led extends SubsystemBase {
    }
     m_led.setData(m_ledBuffer);
   }
+  public void orange() {
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, 255, 127, 0);
+    }
+  }
+  public void red() {
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, 255, 0, 0);
+    }
+  }
+  public void green() {
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, 0, 255, 0);
+    }
+  }
+  public void blue() {
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, 0, 0, 255);
+    }
+  }
+  public void indigo() {
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, 29, 0, 51);
+    }
+  }
+  public void violet() {
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, 127, 0, 255);
+    }
+  }
   
   //chantilly theme
   public void ChantillyTheme(){ //Chantilly color pattern; purple and white
