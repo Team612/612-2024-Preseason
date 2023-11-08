@@ -5,6 +5,7 @@
 package frc.robot.commands.Autonomous;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
@@ -13,7 +14,7 @@ import frc.robot.Constants;
 public class TurnToObject extends CommandBase {
   private Drivetrain m_drivetrain;
   private Vision m_vision;
-  private PIDController turnController;
+  private ProfiledPIDController turnController;
   private double obj_angle;
   private double timer;
   private double rotationspeed;
@@ -21,7 +22,7 @@ public class TurnToObject extends CommandBase {
   public TurnToObject(Drivetrain d, Vision v) {
     m_drivetrain = d;
     m_vision = v;
-    turnController = new PIDController(Constants.DrivetrainConstants.kPThetaController, 0, 0);
+    turnController = Constants.VisionConstants.rotationController;
     addRequirements(m_drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -42,10 +43,20 @@ public class TurnToObject extends CommandBase {
     }
     else {
       timer = 0;
-      obj_angle = m_vision.getBestObject().getYaw();
+      obj_angle = m_vision.getBestObject().getYaw() - 15;
       rotationspeed = -turnController.calculate(obj_angle,0); //constantly calculates
     }
+
     
+    /*if(m_vision.hasBestTarget()){
+      if(m_vision.getBestObject().getYaw() > 5){
+        
+      }else {
+        m_drivetrain.driveMecanum(-0.5, 0.5, -0.5, 0.5);
+      }
+    }
+    */
+    System.out.println(rotationspeed);
     m_drivetrain.turn(rotationspeed);
   }
 
@@ -59,12 +70,14 @@ public class TurnToObject extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_vision.getBestObject().getYaw() < 2 && m_vision.getBestObject().getYaw() > -2){ //threshold of +-2
-      return true;
-    }
-    if (timer/20 > 10)
-      return true;
+    if(m_vision.hasBestTarget()){
+      if (m_vision.getBestObject().getYaw() < 5 && m_vision.getBestObject().getYaw() > -5){ //threshold of +-2
+        return true;
+      }
+      if (timer/20 > 10)
+        return true;
 
+    }
     return false;
   }
 }

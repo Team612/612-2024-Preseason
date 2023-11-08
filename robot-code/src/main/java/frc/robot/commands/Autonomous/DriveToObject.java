@@ -78,7 +78,7 @@ public class DriveToObject extends CommandBase {
       return true;
     
     
-    return (range < 1);
+    return (range < 0.5);
     }
     return false; // if finished, return true or false IN METERS
 }
