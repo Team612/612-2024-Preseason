@@ -23,6 +23,7 @@ public class LedMed extends CommandBase {
   // Called when the comm2and is initially scheduled.
   @Override
   public void initialize() {
+    m_led.resetled();
     counter = 0;
   }
 

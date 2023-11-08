@@ -23,6 +23,7 @@ public class MakeTheRainbowWDelay extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_led.resetled();
     counter = 0;
   }
 
@@ -30,8 +31,8 @@ public class MakeTheRainbowWDelay extends CommandBase {
   @Override
   public void execute() {
     counter++;
-    if(counter % 5 == 0){
-        m_led.CycleThroughTheRainbowW();
+    if(counter % 50 == 0){
+        m_led.CycleThroughTheRainbow();
     }
   }
 
