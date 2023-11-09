@@ -147,7 +147,7 @@ public class Swerve extends SubsystemBase {
   
 
   public static SwerveControllerCommand runTrajectory(Swerve s_swerve, PathPlannerTrajectory path){
-    ProfiledPIDController thetaController = new ProfiledPIDController(Constants.SwerveConstants.kP,
+    ProfiledPIDController thetaController = new ProfiledPIDController(Constants.SwerveConstants.kPTheta,
      Constants.SwerveConstants.kI,
       Constants.SwerveConstants.kD,
        new TrapezoidProfile.Constraints(Constants.SwerveConstants.SwerveMaxSpeed, 5)

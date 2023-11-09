@@ -65,7 +65,7 @@ public class FollowTrajectoryPathPlanner extends CommandBase {
       alliance = Alliance.Blue;
     }
 
-    thetaController = new ProfiledPIDController(Constants.SwerveConstants.kP,
+    thetaController = new ProfiledPIDController(Constants.SwerveConstants.kPTheta,
      Constants.SwerveConstants.kI,
       Constants.SwerveConstants.kD,
        new TrapezoidProfile.Constraints(Constants.SwerveConstants.SwerveMaxSpeed, 5)
