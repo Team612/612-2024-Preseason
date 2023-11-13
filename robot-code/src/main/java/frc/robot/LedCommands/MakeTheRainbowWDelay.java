@@ -31,7 +31,7 @@ public class MakeTheRainbowWDelay extends CommandBase {
   @Override
   public void execute() {
     counter++;
-    if(counter % 50 == 0){
+    if(counter % 10 == 0){
         m_led.CycleThroughTheRainbow();
     }
   }
