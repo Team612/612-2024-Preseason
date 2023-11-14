@@ -27,10 +27,15 @@ public class halfspeedcansparkmax extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_cansparkmax.changeMotorSpeed(m_cansparkmax.getMotorSpeed()+0.01);
+    boolean goDown = false;
     if (m_cansparkmax.getMotorSpeed() == 1) {
+      goDown = true;
+    } else if ((!goDown) || (m_cansparkmax.getMotorSpeed() == -1)) {
+      goDown = false;
+    }
+    if (goDown) {
       m_cansparkmax.changeMotorSpeed(m_cansparkmax.getMotorSpeed()-0.01);
-    } else if (m_cansparkmax.getMotorSpeed() == -1) {
+    } else {
       m_cansparkmax.changeMotorSpeed(m_cansparkmax.getMotorSpeed()+0.01);
     }
   }
