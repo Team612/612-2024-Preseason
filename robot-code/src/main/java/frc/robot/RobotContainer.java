@@ -184,7 +184,7 @@ public class RobotContainer {
      .andThen(new AutoTurnThingy(m_drivetrain))
   );
 
-
+  
   private final SequentialCommandGroup SpinnyWinny = new SequentialCommandGroup(
      boop.andThen(new SetSpeed(m_drivetrain, m_motorthingy))
      .andThen(new setSpeed2(m_drivetrain, m_motorthingy))
