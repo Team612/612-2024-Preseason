@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.lang.reflect.Proxy;
 
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -30,6 +32,7 @@ import frc.robot.commands.Drivetrain.SlowmoDrive;
 import frc.robot.commands.Drivetrain.TrajectoryCreation;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.cansparkmax;
 import frc.robot.subsystems.led;
 import frc.robot.commands.Drivetrain.RollOff;
 import frc.robot.commands.Drivetrain.RunOnTheFly;
@@ -47,8 +50,11 @@ import frc.robot.commands.Drivetrain.FollowTrajectoryPathPlanner;
 import frc.robot.commands.PivotPositions.DefenseMode;
 import frc.robot.commands.PivotPositions.ExtendToPosition;
 import frc.robot.commands.ReleaseAuto;
-import frc.robot.commands.LedCommands.led_routine;
-import frc.roboy.commands.LedCommands.usercolor;
+import frc.robot.LedCommands.led_routine;
+import frc.robot.LedCommands.usercolor;
+import frc.robot.commands.halfspeedcansparkmax;
+import frc.robot.commands.speedupanddowncansparkmax;
+import frc.robot.subsystems.cansparkmax;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -63,6 +69,8 @@ public class RobotContainer {
   
   //Drive subsystems declarations 
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
+  private final cansparkmax m_cansparkmax = new cansparkmax();
+  // private final halfspeedcansparkmax m_halfspeedcansparkmax = new halfspeedcansparkmax(cansparkmax);
   private final DefaultDrive m_defaultdrive = new DefaultDrive(m_drivetrain);
   private final FieldOrientedDrive m_FieldOrientedDrive = new FieldOrientedDrive(m_drivetrain);
 
@@ -167,8 +175,10 @@ public class RobotContainer {
     .andThen(new DockingSequence(m_drivetrain))
   );
   private final Command led_routine = new led_routine(m_Led);
-
-  private final Command usercolorroutine = new usercolor(m_Led);
+  private final SequentialCommandGroup spinAround = new SequentialCommandGroup(
+    new halfspeedcansparkmax(m_cansparkmax),
+    new speedupanddowncansparkmax(m_cansparkmax)
+  );
 
   // private final SequentialCommandGroup m_RedTopScoreAndLeave = new SequentialCommandGroup(
   //   boop
@@ -187,7 +197,7 @@ public class RobotContainer {
 
   // private final SequentialCommandGroup m_BlueBottomScoreAndLeave = new SequentialCommandGroup(
   //   boop
-  //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "BlueBottomLeave", Constants.DrivetrainConstants.constraint, true, false))
+    // .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "BlueBottomLeave", Constants.DrivetrainConstants.constraint, true, false))
   // );
 
   public RobotContainer() {
@@ -269,7 +279,7 @@ public class RobotContainer {
   }
   
   public Command getAutonomousCommand() {
-    return usercolorroutine;
+    return spinAround;
   }
 
 }

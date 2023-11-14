@@ -6,13 +6,12 @@ package frc.robot.LedCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.led;
-import Math;
 
 public class usercolor extends CommandBase {
   /** Creates a new led_routine. */
   private final led m_led;
   private int counter;
-  public led_routine(led led) {
+  public usercolor(led led) {
     m_led = led;
     addRequirements(led);
     // Use addRequirements() here to declare subsystem dependencies.
