@@ -136,12 +136,12 @@ public class RobotContainer {
   
   private final ParallelCommandGroup m_stow = new ParallelCommandGroup(new DefenseMode(m_scope, 0.5).alongWith(new MoveToPosition(m_arm, 0.3, 0)));
  
-  // private final Command m_boop = new SequentialCommandGroup(
-  //   new DefenseMode(m_scope,0.5)
-  //   .andThen(new MoveToPosition(m_arm, 0.6, 20))
-  //   .andThen(new DefenseMode(m_scope,0.5))
-  //   .andThen(new MoveToPosition(m_arm, 0.6, 0))
-  // );
+  private final Command m_boop = new SequentialCommandGroup(
+    new DefenseMode(m_scope,0.5)
+    .andThen(new MoveToPosition(m_arm, 0.6, 20))
+    .andThen(new DefenseMode(m_scope,0.5))
+    .andThen(new MoveToPosition(m_arm, 0.6, 0))
+  );
 
   private final Command m_autoScore = new SequentialCommandGroup(new DefenseMode(m_scope, 0.1)
     .andThen(new Grab(m_grabber)))
@@ -186,8 +186,7 @@ public class RobotContainer {
 
   
   private final SequentialCommandGroup SpinnyWinny = new SequentialCommandGroup(
-     boop.andThen(new SetSpeed(m_drivetrain, m_motorthingy))
-     .andThen(new setSpeed2(m_drivetrain, m_motorthingy))
+     new SetSpeed(m_drivetrain, m_motorthingy).andThen(new setSpeed2(m_drivetrain, m_motorthingy))
   );
   // // private final SequentialCommandGroup m_RedTopScoreAndLeave = new SequentialCommandGroup(
   //   boop
