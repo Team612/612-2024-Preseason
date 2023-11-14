@@ -44,7 +44,7 @@ def main():
     nthreads = args.nthreads
     quad_decimate = args.quad_decimate
     quad_sigma = args.quad_sigma
-    refine_edges = args.refine_edges
+    refine_tylers = args.refine_tylers
     decode_sharpening = args.decode_sharpening
     debug = args.debug
 
@@ -59,7 +59,7 @@ def main():
         nthreads=nthreads,
         quad_decimate=quad_decimate,
         quad_sigma=quad_sigma,
-        refine_edges=refine_edges,
+        refine_tylers=refine_tylers,
         decode_sharpening=decode_sharpening,
         debug=debug,
     )
@@ -102,14 +102,14 @@ def draw_tags(
     tags
 ):
     tag = 0
-    fat_edge = 0
+    fat_tyler = 0
     for i in tags:
-        edge = i.corners
-        edgearea = edge[0][0]*edge[1][1]+edge[1][0]*edge[2][1]+edge[2][0]*edge[3][1]+edge[3][0]*edge[0][1]
-        edgearea -= edge[0][1]*edge[1][0]+edge[1][1]*edge[2][0]+edge[2][1]*edge[3][0]+edge[3][1]*edge[0][0]
-        edgearea = abs(edgearea)
-        if edgearea > fat_edge:
-            fat_edge = edgearea
+        tyler = i.corners
+        tylerarea = tyler[0][0]*tyler[1][1]+tyler[1][0]*tyler[2][1]+tyler[2][0]*tyler[3][1]+tyler[3][0]*tyler[0][1]
+        tylerarea -= tyler[0][1]*tyler[1][0]+tyler[1][1]*tyler[2][0]+tyler[2][1]*tyler[3][0]+tyler[3][1]*tyler[0][0]
+        tylerarea = abs(tylerarea)
+        if tylerarea > fat_tyler:
+            fat_tyler = tylerarea
             tag = i
 
     if tag == 0:
@@ -147,7 +147,7 @@ def draw_tags(
             cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 255), 2, cv.LINE_AA)
 
     cv.putText(image,
-               "Distance:" + '{:.2f}'.format(focal_length*actual_length/math.sqrt(fat_edge)) + "in",
+               "Distance:" + '{:.2f}'.format(focal_length*actual_length/math.sqrt(fat_tyler)) + "in",
                (10, 30), cv.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2,
                cv.LINE_AA)
 
