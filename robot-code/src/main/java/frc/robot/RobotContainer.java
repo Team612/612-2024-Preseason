@@ -34,6 +34,9 @@ import frc.robot.commands.Drivetrain.TrajectoryCreation;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.led;
+import main.java.frc.robot.commands.Drivetrain.SetSpeed;
+import main.java.frc.robot.commands.Drivetrain.SetSpeed2;
+import main.java.frc.robot.subsystems.motorthingy;
 import frc.robot.commands.Drivetrain.RollOff;
 import frc.robot.commands.Drivetrain.RunOnTheFly;
 import frc.robot.commands.Grab;
@@ -64,6 +67,7 @@ public class RobotContainer {
   
   //Drive subsystems declarations 
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
+  private final motorthingy m_motorthingy = motorthingy.getInstance();
   private final DefaultDrive m_defaultdrive = new DefaultDrive(m_drivetrain);
   private final FieldOrientedDrive m_FieldOrientedDrive = new FieldOrientedDrive(m_drivetrain);
 
@@ -173,12 +177,18 @@ public class RobotContainer {
     .andThen(new DockingSequence(m_drivetrain))
   );
 
-  // private final SequentialCommandGroup m_RomiRoutine = new SequentialCommandGroup(
-  //    boop.andThen(new AutoDriveThingy(m_drivetrain))
-  //    .andThen(new AutoTurnThingy(m_drivetrain))
-  //    .andThen(new AutoDriveThingy(m_drivetrain))
-  //    .andThen(new AutoTurnThingy(m_drivetrain))
-  // );
+  private final SequentialCommandGroup m_RomiRoutine = new SequentialCommandGroup(
+     boop.andThen(new AutoDriveThingy(m_drivetrain))
+     .andThen(new AutoTurnThingy(m_drivetrain))
+     .andThen(new AutoDriveThingy(m_drivetrain))
+     .andThen(new AutoTurnThingy(m_drivetrain))
+  );
+
+
+  private final SequentialCommandGroup SpinnyWinny = new SequentialCommandGroup(
+     boop.andThen(new SetSpeed(m_drivetrain, m_motorthingy))
+     .andThen(new setSpeed2(m_drivetrain, m_motorthingy))
+  );
   // // private final SequentialCommandGroup m_RedTopScoreAndLeave = new SequentialCommandGroup(
   //   boop
   //   .andThen(new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "RedTopLeave", Constants.DrivetrainConstants.constraint, true, false))
