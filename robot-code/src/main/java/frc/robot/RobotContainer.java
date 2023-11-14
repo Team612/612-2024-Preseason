@@ -67,7 +67,7 @@ public class RobotContainer {
   
   //Drive subsystems declarations 
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
-  private final motorthingy m_motorthingy = motorthingy.getInstance();
+  private final motorthingy m_motorthingy = new motorthingy();
   private final DefaultDrive m_defaultdrive = new DefaultDrive(m_drivetrain);
   private final FieldOrientedDrive m_FieldOrientedDrive = new FieldOrientedDrive(m_drivetrain);
 
