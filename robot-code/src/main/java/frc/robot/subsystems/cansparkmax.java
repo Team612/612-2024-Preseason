@@ -17,8 +17,10 @@ public class cansparkmax extends SubsystemBase {
     m_canSparkMotor = new CANSparkMax(0, CANSparkMaxLowLevel.MotorType.kBrushless);
   }
   public void changeMotorSpeed(double motorSpeed) {
-    if (motorSpeed < 1) {
+    if ((-1 < motorSpeed) && (motorSpeed < 1)) {
       m_canSparkMotor.set(motorSpeed);
+    } else if (motorSpeed <= -1) {
+      m_canSparkMotor.set(-1);
     } else {
       m_canSparkMotor.set(1);
     }
