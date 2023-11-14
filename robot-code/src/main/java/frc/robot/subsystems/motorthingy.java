@@ -10,10 +10,13 @@ public class motorthingy extends SubsystemBase {
         oomMax.setIdleMode(IdleMode.kBrake);
     }
   
-    public CommandBase settyTheSpeed(double speed) {
+    public void settyTheSpeed(double speed) {
         boomMax.set(speed);
     }
-  
+    
+    public double gettyTheSpeed() {
+        return boomMax.get();
+    }
 
     public boolean exampleCondition() {
 
@@ -26,7 +29,7 @@ public class motorthingy extends SubsystemBase {
   
     @Override
     public void simulationPeriodic() {
-
+        
     }
 }
 
