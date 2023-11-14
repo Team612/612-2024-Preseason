@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Timer;
+import java.util.Scanner;
 public class led extends SubsystemBase {
   private AddressableLED m_led;
   private AddressableLEDBuffer m_ledBuffer;
@@ -146,6 +147,37 @@ public class led extends SubsystemBase {
       LEDInstance = new led();
     }
     return LEDInstance;
+  }
+  public void UserColor() {
+    Scanner Scanner = new Scanner(System.in);
+    System.out.println("Enter a color name or as comma-seperated rgb values.");
+    String color = Scanner.nextLine();
+    if (color == "yellow") {
+      yellow();
+    } else if (color == "purple") {
+      purple();
+    } else if (color == "red") {
+      red();
+    } else if (color == "orange") {
+      orange();
+    } else if (color == "yellow") {
+      yellow();
+    } else if (color == "green") {
+      green();
+    } else if (color == "blue") {
+      blue();
+    } else if (color == "indigo") {
+      indigo();
+    } else if (color == "violet") {
+      violet();
+    } else {
+      // public int redvalue = (int) color.split(",", 0)[0];
+      // public int greenvalue = (int) color.split(",", 0)[1];
+      // public int bluevalue = (int) color.split(",", 0)[2];
+      // for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      //   m_ledBuffer.setRGB(i, redvalue, greenvalue, bluevalue);
+      // }
+    }
   }
   //ends here
 

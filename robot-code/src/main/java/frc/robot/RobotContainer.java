@@ -47,6 +47,8 @@ import frc.robot.commands.Drivetrain.FollowTrajectoryPathPlanner;
 import frc.robot.commands.PivotPositions.DefenseMode;
 import frc.robot.commands.PivotPositions.ExtendToPosition;
 import frc.robot.commands.ReleaseAuto;
+import frc.robot.commands.LedCommands.led_routine;
+import frc.roboy.commands.LedCommands.usercolor;
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -164,6 +166,9 @@ public class RobotContainer {
     new FollowTrajectoryPathPlanner(m_drivetrain, estimator, "BlueMiddleLeaveAndDock", Constants.DrivetrainConstants.constraint, true, false)
     .andThen(new DockingSequence(m_drivetrain))
   );
+  private final Command led_routine = new led_routine(m_Led);
+
+  private final Command usercolorroutine = new usercolor(m_Led);
 
   // private final SequentialCommandGroup m_RedTopScoreAndLeave = new SequentialCommandGroup(
   //   boop
@@ -264,7 +269,7 @@ public class RobotContainer {
   }
   
   public Command getAutonomousCommand() {
-    return m_chooser.getSelected();
+    return usercolorroutine;
   }
 
 }
