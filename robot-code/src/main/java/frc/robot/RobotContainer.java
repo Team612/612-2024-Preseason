@@ -20,6 +20,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.LedCommands.LedMed;
 import frc.robot.LedCommands.MakeTheRainbow;
 import frc.robot.LedCommands.Purple;
+import main.java.frc.robot.subsystems.intake;
 import frc.robot.LedCommands.TeleopDefault;
 import frc.robot.LedCommands.Yellow;
 import frc.robot.commands.Drivetrain.AutoBalance;
@@ -36,6 +37,7 @@ import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.led;
 import main.java.frc.robot.commands.Drivetrain.SetSpeed;
 import main.java.frc.robot.commands.Drivetrain.SetSpeed2;
+import main.java.frc.robot.subsystems.intake;
 import main.java.frc.robot.subsystems.motorthingy;
 import frc.robot.commands.Drivetrain.RollOff;
 import frc.robot.commands.Drivetrain.RunOnTheFly;
@@ -68,6 +70,7 @@ public class RobotContainer {
   //Drive subsystems declarations 
   private final Drivetrain m_drivetrain = Drivetrain.getInstance();
   private final motorthingy m_motorthingy = new motorthingy();
+  private final motorthingy m_intake = new intake();
   private final DefaultDrive m_defaultdrive = new DefaultDrive(m_drivetrain);
   private final FieldOrientedDrive m_FieldOrientedDrive = new FieldOrientedDrive(m_drivetrain);
 
@@ -119,6 +122,7 @@ public class RobotContainer {
     
   private final Command testLed = new LedMed(m_Led, 100);
   private final Command testled2 = new MakeTheRainbow(m_Led, m_drivetrain);
+  private final Command DoubleSolenoide = new doublesolenoid(m_intake);
   // private final Command testLede = new LedMed(m_Led, 100);
   // private final Command testLede = new;
     // private final SequentialCommandGroup m_highCone = new SequentialCommandGroup(
@@ -231,6 +235,7 @@ public class RobotContainer {
     m_chooser.addOption("auto score cone", m_autoScore);
     m_chooser.addOption("Ambulance Lights", testLed);
     m_chooser.addOption("rainbow", testled2);
+    m_chooser.addOption("double solenoid", DoubleSolenoide);
     // m_chooser.addOption("Red Top Leave And Dock", new ProxyCommand(() -> m_RedTopLeaveAndDock));
     // m_chooser.addOption("Blue Top Leave And Dock", new ProxyCommand(() -> m_BlueTopLeaveAndDock));
     // m_chooser.addOption("Red Bottom Leave And Dock", new ProxyCommand(() -> m_RedBottomLeaveAndDock));

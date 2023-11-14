@@ -14,7 +14,7 @@ public class SetSpeed extends CommandBase {
   Drivetrain m_drivetrain;
   motrorthingy m_motorthingy;
   intake m_intake;
-  public SetSpeed(Drivetrain drivetrain,motorthingy motorthingy, intake intake) {
+  public SetSpeed(intake intake) {
     m_intake = intake;
     addRequirements(intake);
     // Use addRequirements() here to declare subsystem dependencies.
