@@ -44,7 +44,7 @@ def main():
     nthreads = args.nthreads
     quad_decimate = args.quad_decimate
     quad_sigma = args.quad_sigma
-    refine_tylers = args.refine_tylers
+    refine_edges = args.refine_edges
     decode_sharpening = args.decode_sharpening
     debug = args.debug
 
@@ -59,7 +59,7 @@ def main():
         nthreads=nthreads,
         quad_decimate=quad_decimate,
         quad_sigma=quad_sigma,
-        refine_tylers=refine_tylers,
+        refine_edges=refine_edges,
         decode_sharpening=decode_sharpening,
         debug=debug,
     )
