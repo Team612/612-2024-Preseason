@@ -1,6 +1,7 @@
 package main.java.frc.robot.subsystems;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import java.lang.AutoCloseable;
+import com.revrobotics.CANSparkMax;
 
 public class motorthingy extends SubsystemBase {
     /** Creates a new ExampleSubsystem. */
@@ -26,7 +27,7 @@ public class motorthingy extends SubsystemBase {
     public void periodic() {
 
     }
-    
+
     @Override
     public void simulationPeriodic() {
 

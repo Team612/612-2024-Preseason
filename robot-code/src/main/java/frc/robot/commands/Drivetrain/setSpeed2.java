@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.motorthingy;
 
-public class SetSpeed extends CommandBase {
+public class SetSpeed2 extends CommandBase {
   /** Creates a new SetForward. */
   Drivetrain m_drivetrain;
   motrorthingy m_motorthingy;
-  public SetSpeed(Drivetrain drivetrain,motorthingy motorthingy) {
+  public SetSpeed2(Drivetrain drivetrain,motorthingy motorthingy) {
     m_motorthingy = motorthingy;
     addRequirements(motorthingy);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -21,14 +21,16 @@ public class SetSpeed extends CommandBase {
   // Called when the command is initially schedulead.
   @Override
   public void initialize() {
-  
+    m_motorthingy.settyTheSpeed(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_motorthingy.settyTheSpeed(0.5);
-    System.out.println(m_motorthingy.gettyTheSpeed());
+    m_motorthingy.settyTheSpeed(m_motorthingy.gettyTheSpeed()+0.1);
+    if(m_motorthingy.gettyTheSpeed()>0.75){
+        m_motorthingy.settyTheSpeed(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
