@@ -19,6 +19,9 @@ public class cansparkmax extends SubsystemBase {
   public void changeMotorSpeed(double motorSpeed) {
     m_canSparkMotor.set(motorSpeed);
   }
+  public double getMotorSpeed() {
+    return m_canSparkMotor.get();
+  }
 
   @Override
   public void periodic() {
