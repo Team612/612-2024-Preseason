@@ -12,6 +12,7 @@ public class SetSpeed2 extends CommandBase {
   /** Creates a new SetForward. */
   Drivetrain m_drivetrain;
   motrorthingy m_motorthingy;
+  double speeds;
   public SetSpeed2(Drivetrain drivetrain,motorthingy motorthingy) {
     m_motorthingy = motorthingy;
     addRequirements(motorthingy);
@@ -21,15 +22,19 @@ public class SetSpeed2 extends CommandBase {
   // Called when the command is initially schedulead.
   @Override
   public void initialize() {
+    speeds = 0.01;
     m_motorthingy.settyTheSpeed(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_motorthingy.settyTheSpeed(m_motorthingy.gettyTheSpeed()+0.1);
+    m_motorthingy.settyTheSpeed(m_motorthingy.gettyTheSpeed()+speeds);
     if(m_motorthingy.gettyTheSpeed()>0.75){
-        m_motorthingy.settyTheSpeed(0);
+        speeds = -0.01;
+    }
+    if (m_motorthingy.gettyTheSpeed()<-0.75){
+        speeds = 0.01;
     }
   }
 
