@@ -19,8 +19,6 @@ public class Arm extends SubsystemBase {
   private static final double DEADZONE = 0.1;
   private CANSparkMax pivot;
   static Arm instance = null;
-
-
   
   /** Creates a new Arm. */
   public Arm() {
