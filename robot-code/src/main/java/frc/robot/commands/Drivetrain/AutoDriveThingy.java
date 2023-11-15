@@ -44,6 +44,6 @@ public class AutoDriveThingy extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return getPose()[1]>1;
+    return m_drivetrain.getPose().getY()>1;
   }
 }

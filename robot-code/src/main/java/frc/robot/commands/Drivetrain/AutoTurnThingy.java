@@ -42,6 +42,6 @@ public class AutoTurnThingy extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return 170<getPoßse()[2]<190;
+    return 170<m_drivetrain.getPose().getRotation().getDegrees() && m_drivetrain.getPose().getRotation().getDegrees()<190;
   }
 }

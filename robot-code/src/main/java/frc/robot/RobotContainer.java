@@ -24,7 +24,9 @@ import frc.robot.LedCommands.Purple;
 import frc.robot.LedCommands.TeleopDefault;
 import frc.robot.LedCommands.Yellow;
 import frc.robot.commands.Drivetrain.AutoBalance;
-// import frc.robot.commands.Drivetrain.AutoDriveThingy;
+import frc.robot.commands.Drivetrain.AutoDriveThingy;
+import frc.robot.commands.Drivetrain.AutoTurnThingy;
+// import AutoDriveThingy;
 import frc.robot.commands.Drivetrain.Boop;
 import frc.robot.commands.Drivetrain.DefaultDrive;
 import frc.robot.commands.Drivetrain.DockingSequence;
@@ -182,10 +184,10 @@ public class RobotContainer {
   );
 
   private final SequentialCommandGroup m_RomiRoutine = new SequentialCommandGroup(
-    //  new AutoDriveThingy(m_drivetrain)
-    //  .andThen(new AutoTurnThingy(m_drivetrain))
-    //  .andThen(new AutoDriveThingy(m_drivetrain))
-    //  .andThen(new AutoTurnThingy(m_drivetrain))
+     new AutoDriveThingy(m_drivetrain)
+     .andThen(new AutoTurnThingy(m_drivetrain))
+     .andThen(new AutoDriveThingy(m_drivetrain))
+     .andThen(new AutoTurnThingy(m_drivetrain))
   );
 
   private final SequentialCommandGroup TheRobotIsHavingASeizure = new SequentialCommandGroup(
@@ -241,6 +243,7 @@ public class RobotContainer {
     m_chooser.addOption("auto score cone", m_autoScore);
     m_chooser.addOption("Ambulance Lights", testLed);
     m_chooser.addOption("rainbow", testled2);
+    m_chooser.addOption("Srikar's test", m_RomiRoutine);
     // m_chooser.addOption("double solenoid", DoubleSolenoide);
     // m_chooser.addOption("Red Top Leave And Dock", new ProxyCommand(() -> m_RedTopLeaveAndDock));
     // m_chooser.addOption("Blue Top Leave And Dock", new ProxyCommand(() -> m_BlueTopLeaveAndDock));
