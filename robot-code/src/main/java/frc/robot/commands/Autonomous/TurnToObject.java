@@ -17,11 +17,13 @@ public class TurnToObject extends CommandBase {
   private ProfiledPIDController turnController;
   private double obj_angle;
   private double timer;
+  private double offset;
   private double rotationspeed;
   /** Creates a new TurnToObject. */
   public TurnToObject(Drivetrain d, Vision v) {
     m_drivetrain = d;
     m_vision = v;
+    offset = 0; //inches//6.25;
     turnController = Constants.VisionConstants.rotationController;
     addRequirements(m_drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -42,9 +44,13 @@ public class TurnToObject extends CommandBase {
       rotationspeed = 0;
     }
     else {
+       
+      if (m_vision.getBestObject().getYaw() < 0){
+        offset = -offset;
+      }
       timer = 0;
-      obj_angle = m_vision.getBestObject().getYaw() - 15;
-      rotationspeed = -turnController.calculate(obj_angle,0); //constantly calculates
+      obj_angle = m_vision.getBestObject().getYaw() + offset;
+      rotationspeed = -turnController.calculate(obj_angle, 0); //constantly calculates
     }
 
     
@@ -71,7 +77,7 @@ public class TurnToObject extends CommandBase {
   @Override
   public boolean isFinished() {
     if(m_vision.hasBestTarget()){
-      if (m_vision.getBestObject().getYaw() < 5 && m_vision.getBestObject().getYaw() > -5){ //threshold of +-2
+      if (m_vision.getBestObject().getYaw() < 1 + offset && m_vision.getBestObject().getYaw() > -1+offset){ //threshold of +-2
         return true;
       }
       if (timer/20 > 10)
