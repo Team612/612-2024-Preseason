@@ -107,7 +107,6 @@ public class ShuffleBoardButtons {
         pivotBLS = m_limitSwitchTab.add("pivotLimitSwitchState", false).getEntry();
 
         telescopeLimitSwitch = m_limitSwitchTab.add("telescopeLimitSwitch", false).getEntry();
-        LEDThingy = m_limitSwitchTab.add("ledCommand", false).getEntry();
         toggleAlliance = m_driverTab.add("Is Red Alliance?",false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
     }
 
@@ -135,7 +134,7 @@ public class ShuffleBoardButtons {
         isGrabbing.setBoolean(grabber.getBooleanGrabber());
         pivotBLS.setBoolean(arm.getPivotBottomLimitSwitchState());
         pivotBLS.setBoolean(arm.getPivotBottomLimitSwitchState());
-        LEDThingy.setBoolean(led.CycleThroughTheRainbow());
+        // LEDThingy.setBoolean(led.CycleThroughTheRainbow());
         telescopeLimitSwitch.setBoolean(telescope.getLimitSwitch());
 
     }

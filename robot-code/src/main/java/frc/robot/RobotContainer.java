@@ -182,14 +182,20 @@ public class RobotContainer {
   );
 
   private final SequentialCommandGroup m_RomiRoutine = new SequentialCommandGroup(
-     boop.andThen(new AutoDriveThingy(m_drivetrain))
+     new AutoDriveThingy(m_drivetrain)
      .andThen(new AutoTurnThingy(m_drivetrain))
      .andThen(new AutoDriveThingy(m_drivetrain))
      .andThen(new AutoTurnThingy(m_drivetrain))
   );
 
+  private final SequentialCommandGroup TheRobotIsHavingASeizure = new SequentialCommandGroup(
+    new AutoTurnThingy(m_drivetrain)
+    .andThen(new AutoTurnThingy(m_drivetrain))
+    .andThen(new AutoTurnThingy(m_drivetrain))
+    // .andThen(new AutoLEDThingy(m_drivetrain))
+ );
   
-  private final SequentialCommandGroup SpinnyWinny = new SequentialCommandGroup(
+  private final SequentialCommandGroup MotorSpinnyWinny = new SequentialCommandGroup(
      new SetSpeed(m_drivetrain, m_motorthingy).andThen(new setSpeed2(m_drivetrain, m_motorthingy))
   );
   // // private final SequentialCommandGroup m_RedTopScoreAndLeave = new SequentialCommandGroup(

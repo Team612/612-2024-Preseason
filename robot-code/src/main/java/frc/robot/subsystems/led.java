@@ -81,6 +81,11 @@ public class led extends SubsystemBase {
     m_led.setData(m_ledBuffer);
   }
 
+  public void setLed3ToWhite(){
+    m_ledBuffer.setRGB(3, 255,255,255);
+    m_led.setData(m_ledBuffer);
+  }
+
   public void CycleThroughTheRainbow(){
     
     for (int i = 0; i < m_ledBuffer.getLength(); i++){
