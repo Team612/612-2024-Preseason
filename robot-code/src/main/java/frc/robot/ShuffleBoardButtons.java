@@ -7,11 +7,8 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.Telescope;
 public class ShuffleBoardButtons {
     ShuffleboardTab m_driverTab;
     ShuffleboardTab m_encoderTab;
@@ -113,28 +110,12 @@ public class ShuffleBoardButtons {
         Drivetrain drivetrain = Drivetrain.getInstance();
         PoseEstimator poseEstimator = PoseEstimator.getPoseEstimatorInstance();
         Pose2d estimator = poseEstimator.getCurrentPose();
-
-        Grabber grabber = Grabber.getInstance();
-        Telescope telescope = Telescope.getInstance();
-        Arm arm = Arm.getInstance();
-
         
         NavxAngle.setDouble(drivetrain.getNavxAngle().getDegrees());
         PoseEstimatorAngle.setDouble(estimator.getRotation().getDegrees());
         PoseEstimatorX.setDouble(estimator.getX());
         PoseEstimatorY.setDouble(estimator.getY());
         fodState.setBoolean(drivetrain.getFodState());
-        pivotEntry.setDouble(arm.getPivotEncoder());
-        telescopeEntry.setDouble(telescope.getTeleEncoder());
-        BoreEncoders.setDouble(grabber.getGrabEncoder());
-        // grabberCurrentGraph.setDouble(grabber.getCurrent());
-        telescopeCurrentGraph.setDouble(telescope.getCurrent());
-        telescopeEncoderRate.setDouble(telescope.getTeleEncoderRate());
-        isGrabbing.setBoolean(grabber.getBooleanGrabber());
-        pivotBLS.setBoolean(arm.getPivotBottomLimitSwitchState());
-        
-        telescopeLimitSwitch.setBoolean(telescope.getLimitSwitch());
-
     }
     
 }
