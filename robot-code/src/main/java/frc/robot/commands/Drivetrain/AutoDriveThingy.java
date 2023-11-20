@@ -11,7 +11,7 @@ import frc.robot.subsystems.Drivetrain;
 
 public class AutoDriveThingy extends CommandBase {
   /** Creates a new DefaultDrive. */
-  
+  Double position;
   Drivetrain m_drivetrain;
   Constants.DrivetrainConstants m_slowmo;
   public AutoDriveThingy(Drivetrain drivetrain) {
@@ -23,6 +23,7 @@ public class AutoDriveThingy extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    position = m_drivetrain.getPose().getX();
     m_drivetrain.driveMecanum(0, 0, 0, 0);
     m_drivetrain.setFodState(false);
 
@@ -44,6 +45,6 @@ public class AutoDriveThingy extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_drivetrain.getPose().getY()>1;
+    return m_drivetrain.getPose().getX() > 1 + position;
   }
 }

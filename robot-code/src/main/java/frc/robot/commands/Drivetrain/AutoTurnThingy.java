@@ -11,7 +11,7 @@ import frc.robot.subsystems.Drivetrain;
 
 public class AutoTurnThingy extends CommandBase {
   /** Creates a new DefaultDrive. */
-  
+  Double angle;
   Drivetrain m_drivetrain;
   Constants.DrivetrainConstants m_slowmo;
   public AutoTurnThingy(Drivetrain drivetrain) {
@@ -23,6 +23,7 @@ public class AutoTurnThingy extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    angle = m_drivetrain.getPose().getRotation().getDegrees();
     m_drivetrain.driveMecanum(0, 0,0,0);
     m_drivetrain.setFodState(false);
   }
@@ -42,6 +43,6 @@ public class AutoTurnThingy extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return 170<m_drivetrain.getPose().getRotation().getDegrees() && m_drivetrain.getPose().getRotation().getDegrees()<190;
+    return 170+angle<m_drivetrain.getPose().getRotation().getDegrees() && m_drivetrain.getPose().getRotation().getDegrees()<190+angle;
   }
 }
