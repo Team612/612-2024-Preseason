@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Vision;
 
 public class TurnTowardsObject extends CommandBase {
   private final ProfiledPIDController turnController = Constants.VisionConstants.rotationController;
@@ -21,10 +22,10 @@ public class TurnTowardsObject extends CommandBase {
   // NEEDS TO change depending on trials
   
   /** Creates a new TurnTowardsObject. */
-  public TurnTowardsObject(Limelight l, Drivetrain m) {
+  public TurnTowardsObject(Drivetrain drive, Limelight lime) {
     
-    m_limelight = l;
-    m_drivetrain = m;
+    m_limelight = lime;
+    m_drivetrain = drive;
     addRequirements(m_limelight);
     addRequirements(m_drivetrain);
 
