@@ -33,11 +33,11 @@ public class SwerveModule {
      Constants.SwerveConstants.kV,
       Constants.SwerveConstants.kA); 
 
-    public SwerveModule(int n, int port_motor,int port_angle, MotorType t){
+    public SwerveModule(int n, int port_motor,int port_angle, int port_encoder, MotorType t){
         moduleNumber = n;
         drive_motor = new CANSparkMax(port_motor, t);
         angle_motor = new CANSparkMax(port_angle, t);
-       // angle_encoder = new CANcoder(port_encoder);
+        angle_encoder = new CANcoder(port_encoder);
         module_position = new SwerveModulePosition(); //keeps track of the modules angle and meters traveled
         integrated_angle_encoder = angle_motor.getEncoder();
 
@@ -45,6 +45,8 @@ public class SwerveModule {
         angle_controller = angle_motor.getPIDController();
         drive_controller = drive_motor.getPIDController();
         configureController();
+
+        angle_encoder = new CANcoder(port_encoder);
     }
 
     public void configureController(){
@@ -70,10 +72,6 @@ public class SwerveModule {
         integrated_angle_encoder.setInverted(false);
         
     }
-
-
-    
-  
     public void setDesiredState(SwerveModuleState state, boolean loop){
         setSpeed(state, loop);
         setAngle(state);

@@ -31,14 +31,14 @@ public final class Constants {
 
      //Spark constants
      public final static int SPARK_FL = 2;
-     public final static int SPARK_FR = 1;
+     public final static int SPARK_FR = 8;
      public final static int SPARK_BL = 4;
-     public final static int SPARK_BR = 3;
+     public final static int SPARK_BR = 6;
      //TEMP VALUES
-     public final static int SPARK_ANGLE_FL = 5;
-     public final static int SPARK_ANGLE_FR = 6;
-     public final static int SPARK_ANGLE_BL = 7;
-     public final static int SPARK_ANGLE_BR = 8;
+     public final static int SPARK_ANGLE_FL = 3;
+     public final static int SPARK_ANGLE_FR = 1;
+     public final static int SPARK_ANGLE_BL = 5;
+     public final static int SPARK_ANGLE_BR = 7;
      //ENCODER VALUES
      public final static int ENCODER_ANGLE_FL = 0;
      public final static int ENCODER_ANGLE_FR = 1;
