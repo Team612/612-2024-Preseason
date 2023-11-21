@@ -39,7 +39,7 @@ public final class Constants {
      public final static int SPARK_ANGLE_FR = 1;
      public final static int SPARK_ANGLE_BL = 5;
      public final static int SPARK_ANGLE_BR = 7;
-     //ENCODER VALUES
+     //ENCODER VALUES (CANCODERS)
      public final static int ENCODER_ANGLE_FL = 0;
      public final static int ENCODER_ANGLE_FR = 1;
      public final static int ENCODER_ANGLE_BL = 2;
@@ -135,8 +135,10 @@ public final class Constants {
     public final double[] bl_distance = {0.0,0.0};
     public final double[] br_distance = {0.0,0.0};
     public static final double gearRatio = 8.14;
+    public static final double diameter = 4;
     public static final double angleConversionFactor = (gearRatio/1.0) / 360; //degree per pulse
-    public static final double distancePerPulse = gearRatio/ ((Math.PI * 4)); //distance per pulse
+    public static final double distancePerPulse = gearRatio/ ((Math.PI * diameter)); //distance per pulse
+    public static final int voltageLimits = 12; //temp values, figure out later
     //pid.. use pid tuner
     public static final double kP = 0;
     public static final double kI = 0;
@@ -147,6 +149,9 @@ public final class Constants {
     public static final double kS = 0;
     public static final double kV = 0;
     public static final double kA = 0;
+    //Swerve Constraints
+    public static final double maxVelocityPerSecond = 1;
+    public static final double maxAngularVelocityPerSecond = 1;
 
 
   }

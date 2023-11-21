@@ -73,11 +73,11 @@ public class Swerve extends SubsystemBase {
   public void drive(double x, double y, double angle){ //For the entire motor
     ChassisSpeeds speed = new ChassisSpeeds(x,y,angle);
     SwerveModuleState[] moduleStates = swerve_kinemtics.toSwerveModuleStates(speed);
-
+    SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates,Constants.SwerveConstants.maxVelocityPerSecond); //so we dont go too fast
     for (SwerveModule mod : SwerveModules){
       mod.setDesiredState(moduleStates[mod.getModuleNumber()], true);
     }
-    //swerve_kinemtics.desaturateWheelSpeeds(moduleStates, speed, x, x, y);
+  
   
 
 
@@ -103,6 +103,14 @@ public class Swerve extends SubsystemBase {
 
   public Rotation2d getNavxAngle(){
     return Rotation2d.fromDegrees(navx.getAngle());
+  }
+
+  public double getVelocityX(){ //use for debugging later
+    return navx.getVelocityX();
+  }
+
+  public double getVelocityY(){ //use for debugging later
+    return navx.getVelocityY();
   }
 
   public PoseEstimator getPoseEstimator(){
