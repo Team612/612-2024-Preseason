@@ -4,20 +4,25 @@
 
 package frc.robot.commands.Autonomous;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
+
 public class TurnTowardsObject extends CommandBase {
+  private final ProfiledPIDController turnController = Constants.VisionConstants.rotationController;
 
   private int timer = 0;
   private double rotationspeed = 0;
-
+  private final double offset = 0.0;
   Limelight m_limelight;
   Drivetrain m_drivetrain;
-  private final double offset = 0; // NEEDS TO change depending on trials
+  // NEEDS TO change depending on trials
+  
   /** Creates a new TurnTowardsObject. */
   public TurnTowardsObject(Limelight l, Drivetrain m) {
-
+    
     m_limelight = l;
     m_drivetrain = m;
     addRequirements(m_limelight);
@@ -80,4 +85,6 @@ public class TurnTowardsObject extends CommandBase {
       } 
       return false;
     }
+    return false;
+  }
 }

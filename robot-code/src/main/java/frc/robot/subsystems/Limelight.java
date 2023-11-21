@@ -43,6 +43,9 @@ public class Limelight extends SubsystemBase {
     return false;
 
   }
+  public void setPipeline(int x){
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(x);
+  }
 
 
 
