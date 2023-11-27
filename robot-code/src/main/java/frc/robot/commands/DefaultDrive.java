@@ -1,36 +1,58 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
+import frc.robot.subsystems.Drivetrain;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.controls.ControlMap;
-import frc.robot.subsystems.Drivetrain;
-
 public class DefaultDrive extends CommandBase {
-  private final Drivetrain m_drivetrain;
+  private Drivetrain s_Swerve;
+  private DoubleSupplier translationSup;
+  private DoubleSupplier strafeSup;
+  private DoubleSupplier rotationSup;
+  private BooleanSupplier robotCentricSup;
 
-  public DefaultDrive(Drivetrain drivetrain) {
-      m_drivetrain = drivetrain;
-      addRequirements(drivetrain);
-  }
+  private SlewRateLimiter translationLimiter = new SlewRateLimiter(3.0);
+  private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0);
+  private SlewRateLimiter rotationLimiter = new SlewRateLimiter(3.0);
 
-  @Override
-  public void initialize() {
-      m_drivetrain.drive(0.0, 0.0, 0.0);
+  public DefaultDrive(
+      Drivetrain s_Swerve,
+      DoubleSupplier translationSup,
+      DoubleSupplier strafeSup,
+      DoubleSupplier rotationSup,
+      BooleanSupplier robotCentricSup) {
+    this.s_Swerve = s_Swerve;
+    addRequirements(s_Swerve);
+
+    this.translationSup = translationSup;
+    this.strafeSup = strafeSup;
+    this.rotationSup = rotationSup;
+    this.robotCentricSup = robotCentricSup;
   }
 
   @Override
   public void execute() {
-      m_drivetrain.drive(-ControlMap.driver_joystick.getRawAxis(1), ControlMap.driver_joystick.getRawAxis(0), ControlMap.driver_joystick.getRawAxis(4));
-  }
+    /* Get Values, Deadband*/
+    double translationVal =
+        translationLimiter.calculate(
+            MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.Swerve.stickDeadband));
+    double strafeVal =
+        strafeLimiter.calculate(
+            MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.Swerve.stickDeadband));
+    double rotationVal =
+        rotationLimiter.calculate(
+            MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.Swerve.stickDeadband));
 
-  @Override
-  public void end(boolean interrupted) {
-      m_drivetrain.drive(0.0, 0.0, 0.0);
+    /* Drive */
+    s_Swerve.drive(
+        new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
+        rotationVal * Constants.Swerve.maxAngularVelocity,
+        !robotCentricSup.getAsBoolean(),
+        true);
   }
 }
