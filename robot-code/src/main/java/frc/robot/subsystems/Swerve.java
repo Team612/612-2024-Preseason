@@ -54,7 +54,7 @@ public class Swerve extends SubsystemBase {
 
     swerve_kinemtics = new SwerveDriveKinematics(this.fl,this.fr,this.bl,this.br);
 
-
+    
     //SwerveModule initalization
     //0 = fl
     //1 = fr
@@ -194,10 +194,10 @@ public class Swerve extends SubsystemBase {
     if (instance == null){
       Constants.SwerveConstants sc = new Constants.SwerveConstants();
       instance = new Swerve(
-        new Translation2d(sc.fl_distance[0],sc.fl_distance[1]),
-        new Translation2d(sc.fr_distance[0],sc.fr_distance[1]),
-        new Translation2d(sc.bl_distance[0],sc.bl_distance[1]),
-        new Translation2d(sc.br_distance[0],sc.br_distance[1]));
+        new Translation2d(sc.wheel_distance[0],sc.wheel_distance[1]),
+        new Translation2d(sc.wheel_distance[0],-sc.wheel_distance[1]),
+        new Translation2d(-sc.wheel_distance[0],sc.wheel_distance[1]),
+        new Translation2d(-sc.wheel_distance[0],-sc.wheel_distance[1]));
     }
     return instance;
   }

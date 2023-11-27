@@ -4,12 +4,12 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import com.ctre.phoenixpro.hardware.CANcoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import com.revrobotics.SparkMaxPIDController;
@@ -25,7 +25,7 @@ public class SwerveModule {
     private SparkMaxPIDController angle_controller;
     private SparkMaxPIDController drive_controller;
     private SwerveModulePosition module_position;
-    private CANcoder module_encoder; //this will be used as more of an accurate measurement compared to the built in Encoder
+    private CANCoder module_encoder; //this will be used as more of an accurate measurement compared to the built in Encoder
     private RelativeEncoder integrated_angle_encoder; //this will be used to actually adjust the position
     private int moduleNumber;
     //private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(null,null , null);  //used to calculate speeds with desire velocity and acceleration
@@ -37,7 +37,7 @@ public class SwerveModule {
         moduleNumber = n;
         drive_motor = new CANSparkMax(port_motor, t); //controls the speed of the robot
         angle_motor = new CANSparkMax(port_angle, t); //controls the angle of the robot
-        module_encoder = new CANcoder(port_encoder); //encoder for the robot
+        module_encoder = new CANCoder(port_encoder); //encoder for the module
         integrated_angle_encoder = angle_motor.getEncoder(); //integrated encoder for the angle motor
         module_position = new SwerveModulePosition(); //keeps track of the modules angle and meters traveled
 
@@ -124,7 +124,7 @@ public class SwerveModule {
 
 
      public Rotation2d getModuleAngle(){
-        double angle = 360 * module_encoder.getAbsolutePosition().getValue(); //gets the number of rotations (-0.5,0.99) and multiplies it by 360 to get current angle
+        double angle = 360 * module_encoder.getAbsolutePosition(); //gets the number of rotations (-0.5,0.99) and multiplies it by 360 to get current angle
         return Rotation2d.fromDegrees(angle);
      }
 

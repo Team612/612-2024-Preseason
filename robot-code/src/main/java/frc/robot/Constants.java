@@ -130,7 +130,7 @@ public final class Constants {
 
   public static class SwerveConstants {
     public static final double SwerveMaxSpeed = 5.0;//5 meters a second
-    public final double[] fl_distance = {0.0,0.0};
+    public final double[] wheel_distance = {Units.inchesToMeters(9.117),Units.inchesToMeters(9.298)};
     public final double[] fr_distance = {0.0,0.0};
     public final double[] bl_distance = {0.0,0.0};
     public final double[] br_distance = {0.0,0.0};

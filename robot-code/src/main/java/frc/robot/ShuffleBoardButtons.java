@@ -129,7 +129,7 @@ public class ShuffleBoardButtons {
         PoseEstimatorX.setDouble(estimator.getX());
         PoseEstimatorY.setDouble(estimator.getY());
         Rotations.setDouble(swerve.getModularRawRotations(0).getRotations());
-        AbsoluteRotations.setDouble(swerve.getModularAbsoluteRotations(0).getRotations());
+        AbsoluteRotations.setDouble(swerve.getModularAbsoluteRotations(0).getRotations()); //module 0, fl
         
     }
     
