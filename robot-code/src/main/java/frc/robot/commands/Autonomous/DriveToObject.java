@@ -23,9 +23,9 @@ public class DriveToObject extends CommandBase {
   private double speed = 0.3;
   private int timer = 0;
   private boolean runOnce = false;
-  private double range = 0.0;
-  private double kTargetHeight = 0;
-  private double kMountHeight = 0;
+  private double range = 18; //inches because we like inches
+  private double kTargetHeight = 4;
+  private double kMountHeight = 31.2;
 
  
 
