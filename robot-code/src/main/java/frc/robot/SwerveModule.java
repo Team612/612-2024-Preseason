@@ -59,23 +59,23 @@ public class SwerveModule {
         drive_controller.setD(Constants.SwerveConstants.kD);
         drive_controller.setFF(0.0);
 
+        drive_motor.setInverted(false);
+        angle_motor.setInverted(false);
+        drive_motor.burnFlash();
+        angle_motor.burnFlash();
+
     }
 
     public void configureEncoders(){
         //integrated_angle_encoder.setPositionConversionFactor(Constants.SwerveConstants.angleConversionFactor); //degrees per pulse
         drive_motor.getEncoder().setPositionConversionFactor(Constants.SwerveConstants.distancePerPulse);
         drive_motor.getEncoder().setVelocityConversionFactor(Constants.SwerveConstants.distancePerPulse / 60); //rps
-
         drive_motor.setSmartCurrentLimit(Constants.SwerveConstants.voltageLimits);
         angle_motor.setSmartCurrentLimit(Constants.SwerveConstants.voltageLimits);
-
-        drive_motor.getEncoder().setInverted(false);
-        angle_motor.getEncoder().setInverted(false);
         integrated_angle_encoder.setInverted(false);
         
         //saves settings
-        drive_motor.burnFlash();
-        angle_motor.burnFlash();
+
         
     }
 
@@ -101,6 +101,11 @@ public class SwerveModule {
         Rotation2d angle = state.angle; //kPositions takes in amount of rotations
         angle_controller.setReference(getRotationsFromDegree(angle), ControlType.kPosition); //we're moving based off angular position, hence the control type
      } 
+
+     public void resetToAbsolute(){
+        integrated_angle_encoder.setPosition(0);
+        //module_encoder.setPosition(0);
+     }
     
 
      public double getRotationsFromDegree(Rotation2d x){ //Assuming a 8.14:1 gear rato
@@ -124,7 +129,7 @@ public class SwerveModule {
 
 
      public Rotation2d getModuleAngle(){
-        double angle = 360 * module_encoder.getAbsolutePosition(); //gets the number of rotations (-0.5,0.99) and multiplies it by 360 to get current angle
+        double angle = module_encoder.getAbsolutePosition(); 
         return Rotation2d.fromDegrees(angle);
      }
 

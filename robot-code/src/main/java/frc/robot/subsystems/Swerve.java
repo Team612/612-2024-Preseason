@@ -42,6 +42,7 @@ public class Swerve extends SubsystemBase {
   private SwerveDriveKinematics swerve_kinemtics;
   private PoseEstimator poseEstimator;
   private SwerveModulePosition[] swerve_position;
+  private double angle_offset;
   AHRS navx = new AHRS(I2C.Port.kMXP); //gyro
   /** Creates a new Swerve. */
 
@@ -51,6 +52,7 @@ public class Swerve extends SubsystemBase {
     this.fr = fr;
     this.bl = bl;
     this.br = br;
+    angle_offset = 0;
 
     swerve_kinemtics = new SwerveDriveKinematics(this.fl,this.fr,this.bl,this.br);
 
@@ -94,15 +96,21 @@ public class Swerve extends SubsystemBase {
   }
 
   public void resetWheelOrientation(){
-    ChassisSpeeds speed = new ChassisSpeeds(0,0,0);
-    SwerveModuleState[] moduleStates = swerve_kinemtics.toSwerveModuleStates(speed);
+    // ChassisSpeeds speed = new ChassisSpeeds(0,0,0);
+    // SwerveModuleState[] moduleStates = swerve_kinemtics.toSwerveModuleStates(speed);
     for (SwerveModule mod : SwerveModules){
-      mod.setDesiredState(moduleStates[mod.getModuleNumber()], true);
+      //mod.setDesiredState(moduleStates[mod.getModuleNumber()], true);
+      mod.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)), false);
+      mod.resetToAbsolute();
     }
   }
 
   public Rotation2d getNavxAngle(){
     return Rotation2d.fromDegrees(navx.getAngle());
+  }
+
+  public void setAngleOffset(){
+    angle_offset = SwerveModules[0].getModuleAngle().getDegrees(); //in theory, should be the same throughout
   }
 
   public double getVelocityX(){ //use for debugging later
