@@ -65,7 +65,7 @@ public class DriveToObject extends CommandBase {
   @Override
   public boolean isFinished() { 
     if(m_limelight.getTv()){ //siri go look fiscord i will send pic
-      double dist = (kTargetHeight - kMountHeight) / (Math.tan(m_limelight.getTy()) * Math.cos(m_limelight.getTx())); // need to change offset too
+      double dist = (kTargetHeight - kMountHeight) / (Math.tan(Units.degreesToRadians(m_limelight.getTy())) * Math.cos(Units.degreesToRadians(m_limelight.getTx()))); // need to change offset too
       if(dist < range){ // so this it very small threshold rn, will change later
         return true;
       } 
