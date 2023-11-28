@@ -14,6 +14,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Vision;
 
 public class DriveToObject extends CommandBase {
@@ -23,6 +24,8 @@ public class DriveToObject extends CommandBase {
   private int timer = 0;
   private boolean runOnce = false;
   private double range = 0.0;
+  private double kTargetHeight = 0;
+  private double kMountHeight = 0;
 
  
 
@@ -54,7 +57,7 @@ public class DriveToObject extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_vision.setPipeline(1);
+    m_limelight.setPipeline(1);
     m_drivetrain.driveMecanum(0, 0, 0, 0);
   }
 
@@ -62,7 +65,7 @@ public class DriveToObject extends CommandBase {
   @Override
   public boolean isFinished() { 
     if(m_limelight.getTv()){ //siri go look fiscord i will send pic
-      double dist = (kTargetHeight - kMountHeight) / (Math.tan(m_limelight.getTy()) * Math.cos(m_limelight.getTx())) // need to change offset too
+      double dist = (kTargetHeight - kMountHeight) / (Math.tan(m_limelight.getTy()) * Math.cos(m_limelight.getTx())); // need to change offset too
       if(dist < range){ // so this it very small threshold rn, will change later
         return true;
       } 
