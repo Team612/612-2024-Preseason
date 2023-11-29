@@ -58,8 +58,6 @@ public class ShuffleBoardButtons {
 
     public static GenericEntry toggleMittens;
 
-    //subsystem
-    public Swerve m_swerve = Swerve.getInstance();
 
     
 
@@ -119,8 +117,8 @@ public class ShuffleBoardButtons {
 
     public void updateButtons(){
         PoseEstimator poseEstimator = PoseEstimator.getPoseEstimatorInstance();
-        Swerve swerve = Swerve.getInstance();
         Pose2d estimator = poseEstimator.getCurrentPose();
+        Swerve m_swerve = Swerve.getInstance();
 
 
         
@@ -128,8 +126,8 @@ public class ShuffleBoardButtons {
         PoseEstimatorAngle.setDouble(estimator.getRotation().getDegrees());
         PoseEstimatorX.setDouble(estimator.getX());
         PoseEstimatorY.setDouble(estimator.getY());
-        Rotations.setDouble(swerve.getModularRawRotations(0).getRotations());
-        AbsoluteRotations.setDouble(swerve.getModularAbsoluteRotations(0).getRotations()); //module 0, fl
+        Rotations.setDouble(m_swerve.getModularRawRotations(0).getRotations());
+        AbsoluteRotations.setDouble(m_swerve.getModularAbsoluteRotations(0).getRotations()); //module 0, fl
         
     }
     

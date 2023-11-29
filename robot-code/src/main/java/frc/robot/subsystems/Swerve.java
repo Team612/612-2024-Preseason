@@ -34,25 +34,28 @@ import edu.wpi.first.math.geometry.Translation2d;
 public class Swerve extends SubsystemBase {
 
   static Swerve instance = null;
-  private Translation2d fl;
-  private Translation2d fr;
-  private Translation2d bl;
-  private Translation2d br;
-  private SwerveModule[] SwerveModules = new SwerveModule[4];
+  private final Translation2d fl;
+  private final Translation2d fr;
+  private final Translation2d bl;
+  private final Translation2d br;
+  private final SwerveModule[] SwerveModules;
   private SwerveDriveKinematics swerve_kinemtics;
   private PoseEstimator poseEstimator;
   private SwerveModulePosition[] swerve_position;
   private double angle_offset;
-  AHRS navx = new AHRS(I2C.Port.kMXP); //gyro
+  AHRS navx;
   /** Creates a new Swerve. */
 
-  public Swerve(Translation2d fl,Translation2d fr,Translation2d bl,Translation2d br) {
+  public Swerve() {
     //Kinematics initalization
-    this.fl = fl;
-    this.fr = fr;
-    this.bl = bl;
-    this.br = br;
-    angle_offset = 0;
+    SwerveModules = new SwerveModule[4];
+    navx = new AHRS(I2C.Port.kMXP); //gyro
+
+    Constants.SwerveConstants sc = new Constants.SwerveConstants();
+    this.fl = new Translation2d(sc.wheel_distance[0],sc.wheel_distance[1]);
+    this.fr =  new Translation2d(sc.wheel_distance[0],-sc.wheel_distance[1]);
+    this.bl =  new Translation2d(-sc.wheel_distance[0],sc.wheel_distance[1]);
+    this.br = new Translation2d(-sc.wheel_distance[0],-sc.wheel_distance[1]);
 
     swerve_kinemtics = new SwerveDriveKinematics(this.fl,this.fr,this.bl,this.br);
 
@@ -62,10 +65,10 @@ public class Swerve extends SubsystemBase {
     //1 = fr
     //2 = bl
     //3 = br
-    SwerveModules[0] = new SwerveModule(0, Constants.DrivetrainConstants.SPARK_FL, Constants.DrivetrainConstants.SPARK_ANGLE_FL, Constants.DrivetrainConstants.ENCODER_ANGLE_FL, MotorType.kBrushless); //fl
-    SwerveModules[1] = new SwerveModule(1, Constants.DrivetrainConstants.SPARK_FR, Constants.DrivetrainConstants.SPARK_ANGLE_FR, Constants.DrivetrainConstants.ENCODER_ANGLE_FR, MotorType.kBrushless); //fr
-    SwerveModules[2] = new SwerveModule(2, Constants.DrivetrainConstants.SPARK_BL, Constants.DrivetrainConstants.SPARK_ANGLE_BL, Constants.DrivetrainConstants.ENCODER_ANGLE_BL, MotorType.kBrushless); //bl
-    SwerveModules[3] = new SwerveModule(3, Constants.DrivetrainConstants.SPARK_BR, Constants.DrivetrainConstants.SPARK_ANGLE_BR,  Constants.DrivetrainConstants.ENCODER_ANGLE_BR, MotorType.kBrushless); //br
+    SwerveModules[0] = new SwerveModule(0, Constants.DrivetrainConstants.SPARK_FL, Constants.DrivetrainConstants.SPARK_ANGLE_FL, Constants.DrivetrainConstants.ENCODER_ANGLE_FL); //fl
+    SwerveModules[1] = new SwerveModule(1, Constants.DrivetrainConstants.SPARK_FR, Constants.DrivetrainConstants.SPARK_ANGLE_FR, Constants.DrivetrainConstants.ENCODER_ANGLE_FR); //fr
+    SwerveModules[2] = new SwerveModule(2, Constants.DrivetrainConstants.SPARK_BL, Constants.DrivetrainConstants.SPARK_ANGLE_BL, Constants.DrivetrainConstants.ENCODER_ANGLE_BL); //bl
+    SwerveModules[3] = new SwerveModule(3, Constants.DrivetrainConstants.SPARK_BR, Constants.DrivetrainConstants.SPARK_ANGLE_BR,  Constants.DrivetrainConstants.ENCODER_ANGLE_BR); //br
 
     swerve_position = new SwerveModulePosition[]{SwerveModules[0].getPositionObject(),SwerveModules[1].getPositionObject(),SwerveModules[2].getPositionObject(),SwerveModules[3].getPositionObject()};
     poseEstimator = new PoseEstimator();
@@ -198,17 +201,15 @@ public class Swerve extends SubsystemBase {
     // System.out.println("******************************************" + navxAngleOffset + "**************************************");
   }
    */
+  
   public static Swerve getInstance(){
     if (instance == null){
-      Constants.SwerveConstants sc = new Constants.SwerveConstants();
-      instance = new Swerve(
-        new Translation2d(sc.wheel_distance[0],sc.wheel_distance[1]),
-        new Translation2d(sc.wheel_distance[0],-sc.wheel_distance[1]),
-        new Translation2d(-sc.wheel_distance[0],sc.wheel_distance[1]),
-        new Translation2d(-sc.wheel_distance[0],-sc.wheel_distance[1]));
-    }
+      instance = new Swerve();
+      
+  }
     return instance;
   }
+  
 
 
 

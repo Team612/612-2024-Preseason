@@ -15,7 +15,7 @@ import frc.robot.subsystems.Swerve;
 public class RunOnTheFly extends CommandBase {
   private final Vision m_vision;
   private final PoseEstimator poseEstimatorSystem;
-  private Swerve m_swerve;
+  private final Swerve m_swerve;
   private final boolean resetOdom;
   private final TrajectoryCreation m_traj;
   private final double translation;
@@ -32,7 +32,6 @@ public class RunOnTheFly extends CommandBase {
     m_traj = traj;
     m_vision = v;
     translation = y;
-    m_swerve = Swerve.getInstance();
 
     addRequirements(s, v, p);
   }

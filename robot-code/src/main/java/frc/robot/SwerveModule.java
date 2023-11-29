@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.MotorCommutation;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -33,10 +34,10 @@ public class SwerveModule {
      Constants.SwerveConstants.kV,
       Constants.SwerveConstants.kA); 
 
-    public SwerveModule(int n, int port_motor,int port_angle, int port_encoder, MotorType t){
+    public SwerveModule(int n, int port_motor,int port_angle, int port_encoder){
         moduleNumber = n;
-        drive_motor = new CANSparkMax(port_motor, t); //controls the speed of the robot
-        angle_motor = new CANSparkMax(port_angle, t); //controls the angle of the robot
+        drive_motor = new CANSparkMax(port_motor, MotorType.kBrushless); //controls the speed of the robot
+        angle_motor = new CANSparkMax(port_angle, MotorType.kBrushless); //controls the angle of the robot
         module_encoder = new CANCoder(port_encoder); //encoder for the module
         integrated_angle_encoder = angle_motor.getEncoder(); //integrated encoder for the angle motor
         module_position = new SwerveModulePosition(); //keeps track of the modules angle and meters traveled
@@ -99,7 +100,10 @@ public class SwerveModule {
 
     public void setAngle(SwerveModuleState state){ 
         Rotation2d angle = state.angle; //kPositions takes in amount of rotations
-        angle_controller.setReference(getRotationsFromDegree(angle), ControlType.kPosition); //we're moving based off angular position, hence the control type
+        angle_controller.setReference(angle.getDegrees(), ControlType.kPosition);
+         //we're moving based off angular position, hence the control type
+         //getRotationsFromDegree(angle);
+         
      } 
 
      public void resetToAbsolute(){

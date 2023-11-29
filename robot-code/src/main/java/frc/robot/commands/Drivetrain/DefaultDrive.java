@@ -13,6 +13,7 @@ public class DefaultDrive extends CommandBase {
   Swerve m_swerve;
   Constants.DrivetrainConstants m_slowmo;
   public DefaultDrive(Swerve swerve) {
+    m_swerve = swerve;
     addRequirements(m_swerve);
     // Use addRequirements() here to declare subsystem dependencies.
   }
