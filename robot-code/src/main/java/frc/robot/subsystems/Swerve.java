@@ -43,7 +43,7 @@ public class Swerve extends SubsystemBase {
   private PoseEstimator poseEstimator;
   private SwerveModulePosition[] swerve_position;
   private double angle_offset;
-  AHRS navx;
+  private AHRS navx;
   /** Creates a new Swerve. */
 
   public Swerve() {
@@ -74,6 +74,13 @@ public class Swerve extends SubsystemBase {
     poseEstimator = new PoseEstimator();
   }
 
+  public static Swerve getInstance(){
+    if (instance == null){
+      instance = new Swerve();
+      
+  }
+    return instance;
+  }
 
   public void drive(double x, double y, double angle){ //For the entire motor
     ChassisSpeeds speed = new ChassisSpeeds(x,y,angle);
@@ -87,6 +94,8 @@ public class Swerve extends SubsystemBase {
 
 
   }
+
+  
 
   public void drive(double x, double y, double angle, int motor){ //for individual motors
     ChassisSpeeds speed = new ChassisSpeeds(x,y,angle);
@@ -202,14 +211,7 @@ public class Swerve extends SubsystemBase {
   }
    */
   
-  public static Swerve getInstance(){
-    if (instance == null){
-      instance = new Swerve();
-      
-  }
-    return instance;
-  }
-  
+
 
 
 

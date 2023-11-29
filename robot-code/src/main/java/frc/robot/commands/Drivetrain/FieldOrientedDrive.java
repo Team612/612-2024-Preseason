@@ -14,7 +14,7 @@ public class FieldOrientedDrive extends CommandBase {
   public FieldOrientedDrive(Swerve swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_swerve = swerve;
-    addRequirements(swerve);
+    addRequirements(m_swerve);
   }
 
   // Called when the command is initially scheduled.
