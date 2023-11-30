@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -92,17 +93,6 @@ public final class Constants {
      public static final double kPFrontRightVel = 4.875;
      public static final double kPRearRightVel = 4.875;
 
-     
-
- 
-     //Converting chassis velocity into individual wheel velocities
-     public static final MecanumDriveKinematics kDriveKinematics =
-         new MecanumDriveKinematics(
-             new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-             new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-             new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2)
-     );
 
      
      //trajectory constraints
@@ -130,7 +120,7 @@ public final class Constants {
 
   public static class SwerveConstants {
     public static final double SwerveMaxSpeed = 5.0;//5 meters a second
-    public final double[] wheel_distance = {Units.inchesToMeters(9.117),Units.inchesToMeters(9.298)};
+    public static final double[] wheel_distance = {Units.inchesToMeters(9.117),Units.inchesToMeters(9.298)};
     public static final double gearRatio = 8.14;
     public static final double diameter = 4;
     public static final double angleConversionFactor = (gearRatio/1.0) / 360; //degree per pulse
@@ -150,6 +140,12 @@ public final class Constants {
     public static final double maxVelocityPerSecond = 1;
     public static final double maxAngularVelocityPerSecond = 1;
 
+    public static final SwerveDriveKinematics swerve_kinemtics = new SwerveDriveKinematics(
+      new Translation2d(wheel_distance[0],wheel_distance[1]),
+      new Translation2d(wheel_distance[0],-wheel_distance[1]),
+      new Translation2d(-wheel_distance[0],wheel_distance[1]),
+      new Translation2d(-wheel_distance[0],-wheel_distance[1])
+    );
 
   }
   public static class OperatorConstants {

@@ -21,12 +21,12 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 /** Add your docs here. */
 
 public class SwerveModule {
-    private CANSparkMax drive_motor;
-    private CANSparkMax angle_motor;
+    private final CANSparkMax drive_motor;
+    private final CANSparkMax angle_motor;
     private SparkMaxPIDController angle_controller;
     private SparkMaxPIDController drive_controller;
     private SwerveModulePosition module_position;
-    private CANCoder module_encoder; //this will be used as more of an accurate measurement compared to the built in Encoder
+    private final CANCoder module_encoder; //this will be used as more of an accurate measurement compared to the built in Encoder
     private RelativeEncoder integrated_angle_encoder; //this will be used to actually adjust the position
     private int moduleNumber;
     //private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(null,null , null);  //used to calculate speeds with desire velocity and acceleration

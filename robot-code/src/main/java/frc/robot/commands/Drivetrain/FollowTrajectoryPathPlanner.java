@@ -83,7 +83,7 @@ public class FollowTrajectoryPathPlanner extends CommandBase {
 
  
    
-    swerveController = new SwerveControllerCommand(traj, s_swerve.getRobotPosition() , s_swerve.getKinematics(), xController , yController, thetaController, null);
+    swerveController = new SwerveControllerCommand(traj, s_swerve.getRobotPosition() , Constants.SwerveConstants.swerve_kinemtics, xController , yController, thetaController, null, s_swerve);
     controllerCommand = swerveController;
     controllerCommand.initialize();
   }

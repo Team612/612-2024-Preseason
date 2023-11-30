@@ -34,10 +34,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 public class Swerve extends SubsystemBase {
 
   static Swerve instance = null;
-  private final Translation2d fl;
-  private final Translation2d fr;
-  private final Translation2d bl;
-  private final Translation2d br;
   private final SwerveModule[] SwerveModules;
   private SwerveDriveKinematics swerve_kinemtics;
   private PoseEstimator poseEstimator;
@@ -49,15 +45,8 @@ public class Swerve extends SubsystemBase {
   public Swerve() {
     //Kinematics initalization
     SwerveModules = new SwerveModule[4];
-    navx = new AHRS(I2C.Port.kMXP); //gyro
-
-    Constants.SwerveConstants sc = new Constants.SwerveConstants();
-    this.fl = new Translation2d(sc.wheel_distance[0],sc.wheel_distance[1]);
-    this.fr =  new Translation2d(sc.wheel_distance[0],-sc.wheel_distance[1]);
-    this.bl =  new Translation2d(-sc.wheel_distance[0],sc.wheel_distance[1]);
-    this.br = new Translation2d(-sc.wheel_distance[0],-sc.wheel_distance[1]);
-
-    swerve_kinemtics = new SwerveDriveKinematics(this.fl,this.fr,this.bl,this.br);
+    navx = new AHRS(I2C.Port.kMXP); 
+    swerve_kinemtics = Constants.SwerveConstants.swerve_kinemtics;
 
     
     //SwerveModule initalization
@@ -71,13 +60,12 @@ public class Swerve extends SubsystemBase {
     SwerveModules[3] = new SwerveModule(3, Constants.DrivetrainConstants.SPARK_BR, Constants.DrivetrainConstants.SPARK_ANGLE_BR,  Constants.DrivetrainConstants.ENCODER_ANGLE_BR); //br
 
     swerve_position = new SwerveModulePosition[]{SwerveModules[0].getPositionObject(),SwerveModules[1].getPositionObject(),SwerveModules[2].getPositionObject(),SwerveModules[3].getPositionObject()};
-    poseEstimator = new PoseEstimator();
+    //poseEstimator = new PoseEstimator();
   }
 
   public static Swerve getInstance(){
     if (instance == null){
       instance = new Swerve();
-      
   }
     return instance;
   }
@@ -164,9 +152,7 @@ public class Swerve extends SubsystemBase {
 
   
 
-  public SwerveDriveKinematics getKinematics(){
-    return swerve_kinemtics;
-  }
+
 
   public void resetPoseEstimator(){ 
     poseEstimator.resetPose();
@@ -188,7 +174,7 @@ public class Swerve extends SubsystemBase {
     Constants.SwerveConstants.kI, 
     Constants.SwerveConstants.kD); 
 
-    return new SwerveControllerCommand(path, s_swerve.getRobotPosition(),s_swerve.getKinematics(), xController, yController,thetaController, null);
+    return new SwerveControllerCommand(path, s_swerve.getRobotPosition(),Constants.SwerveConstants.swerve_kinemtics, xController, yController,thetaController, null);
     
   }
 

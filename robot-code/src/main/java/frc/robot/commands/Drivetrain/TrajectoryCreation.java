@@ -26,10 +26,10 @@ import frc.robot.subsystems.Vision;
 public class TrajectoryCreation {
 
     public TrajectoryConfig config = new TrajectoryConfig(Constants.DrivetrainConstants.kMaxVelocityMetersPerSecond, Constants.DrivetrainConstants.maxAccelerationMetersPerSecondSq)
-        .setKinematics(Constants.DrivetrainConstants.kDriveKinematics);
+        .setKinematics(Constants.SwerveConstants.swerve_kinemtics);
 
     public TrajectoryConfig config_backwards = new TrajectoryConfig(Constants.DrivetrainConstants.kMaxVelocityMetersPerSecond, Constants.DrivetrainConstants.maxAccelerationMetersPerSecondSq)
-        .setKinematics(Constants.DrivetrainConstants.kDriveKinematics).setReversed(true);
+        .setKinematics(Constants.SwerveConstants.swerve_kinemtics).setReversed(true);
     
 
     public Trajectory testTrajectory = TrajectoryGenerator.generateTrajectory(
