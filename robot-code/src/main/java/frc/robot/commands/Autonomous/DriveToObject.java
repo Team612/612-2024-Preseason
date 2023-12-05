@@ -4,8 +4,6 @@
 
 package frc.robot.commands.Autonomous;
 
-import org.photonvision.PhotonUtils;
-
 import com.pathplanner.lib.auto.PIDConstants;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -15,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Vision;
 
 public class DriveToObject extends CommandBase {
   private Drivetrain m_drivetrain;
@@ -26,6 +23,7 @@ public class DriveToObject extends CommandBase {
   private double range = 18; //inches because we like inches
   private double kTargetHeight = 4;
   private double kMountHeight = 31.2;
+  private double targetDistance = 60.0; // 60 inches = 5 feet cuz we like inches so too bad
 
  
 
@@ -76,6 +74,9 @@ public class DriveToObject extends CommandBase {
     return false;
   }
 
+
+}
+
 //calculate Rotation
 // private double calculateRotation() {
 //   if (m_vision.hasBestTarget()) {
@@ -90,4 +91,4 @@ public class DriveToObject extends CommandBase {
 //     return 0; // No rotation needed if no valid target is detected.
 //   }
 // }
-}
+//}
