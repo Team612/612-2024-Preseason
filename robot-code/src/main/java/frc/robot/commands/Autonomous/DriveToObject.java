@@ -43,8 +43,6 @@ public class DriveToObject extends CommandBase {
   public void initialize() {
       m_limelight.setPipeline(1); //whatever pipeline to use
       m_drivetrain.driveMecanum(0, 0, 0, 0);
-    
-  
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -64,13 +62,13 @@ public class DriveToObject extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() { 
-    if(m_limelight.getTv()){ //siri go look fiscord i will send pic
+    if(m_limelight.getTv()){ 
       double dist = (kTargetHeight - kMountHeight) / (Math.tan(Units.degreesToRadians(m_limelight.getTy())) * Math.cos(Units.degreesToRadians(m_limelight.getTx()))); // need to change offset too
       if(dist < range){ // so this it very small threshold rn, will change later
         return true;
       } 
-
-      if (timer/20 > 10) {  // cuz timer is incremented in execute
+      
+      if (timer/20 > 10) {  
         return true; 
       } 
       return false;

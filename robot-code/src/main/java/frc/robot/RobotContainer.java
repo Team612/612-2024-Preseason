@@ -91,7 +91,7 @@ public class RobotContainer {
   private final AutoBalance m_autoBalance = new AutoBalance(m_drivetrain);
   
   private final TeleopDefault m_TeleopDefault = new TeleopDefault(m_Led, m_Vision);
-  private final DriveToObject m_DTO = new DriveToObject(m_drivetrain, m_Vision);
+  private final DriveToObject m_DTO = new DriveToObject(m_drivetrain, m_limelight);
 
   //gunner outtakes/defense mode
   private final Command m_midCone = new SequentialCommandGroup(
@@ -115,8 +115,7 @@ public class RobotContainer {
     until(() -> Math.abs(ControlMap.gunner_joystick.getRawAxis(1)) >= 0.1 || ControlMap.GUNNER_RB.getAsBoolean() || ControlMap.GUNNER_LB.getAsBoolean());
 
   //TEST AUTONOMOUS
-  private final Command m_driveObject = new SequentialCommandGroup(new TurnTowardsObject(m_drivetrain, m_limelight).andThen(new DriveToObject(m_drivetrain, m_Vision))); //Note, test this as a parralelCommandGroup later
-
+  private final Command m_driveObject = new SequentialCommandGroup(new TurnTowardsObject(m_drivetrain, m_limelight));
       
     // private final SequentialCommandGroup m_highCone = new SequentialCommandGroup(
     //   new ExtendToPosition(m_scope, 0.7, 0).

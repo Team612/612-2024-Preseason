@@ -91,7 +91,7 @@ public class TurnTowardsObject extends CommandBase {
   private final ProfiledPIDController turnController = Constants.VisionConstants.rotationController;
   private int timer = 0;
   private double rotationspeed = 0;
-  private final double offset = 0.0; // Adjust this offset as needed
+  private final double offset = 6.0; // Adjust this offset as needed
   private final Limelight m_limelight;
   private final Drivetrain m_drivetrain;
   public TurnTowardsObject(Drivetrain drive, Limelight lime) {
@@ -127,6 +127,7 @@ public class TurnTowardsObject extends CommandBase {
           double yaw = m_limelight.getTx() + offset;
           return Math.abs(yaw) < 1; // Check within a small threshold
       }
+      rotationspeed = 0;
       return timer / 20 > 10; // Check for a timer limit
   }
 }
