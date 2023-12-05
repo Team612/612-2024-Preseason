@@ -115,7 +115,7 @@ public class RobotContainer {
     until(() -> Math.abs(ControlMap.gunner_joystick.getRawAxis(1)) >= 0.1 || ControlMap.GUNNER_RB.getAsBoolean() || ControlMap.GUNNER_LB.getAsBoolean());
 
   //TEST AUTONOMOUS
-  private final Command m_driveObject = new SequentialCommandGroup(new TurnTowardsObject(m_drivetrain, m_limelight));
+  private final Command m_driveObject = new SequentialCommandGroup(new TurnTowardsObject(m_drivetrain, m_limelight).andThen(new DriveToObject(m_drivetrain, m_limelight)));
       
     // private final SequentialCommandGroup m_highCone = new SequentialCommandGroup(
     //   new ExtendToPosition(m_scope, 0.7, 0).
