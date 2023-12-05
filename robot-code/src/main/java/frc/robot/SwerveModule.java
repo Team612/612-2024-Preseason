@@ -29,6 +29,7 @@ public class SwerveModule {
     private final CANCoder module_encoder; //this will be used as more of an accurate measurement compared to the built in Encoder
     private RelativeEncoder integrated_angle_encoder; //this will be used to actually adjust the position
     private int moduleNumber;
+    private double lastAngle;
     //private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(null,null , null);  //used to calculate speeds with desire velocity and acceleration
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.SwerveConstants.kS,
      Constants.SwerveConstants.kV,
@@ -61,7 +62,7 @@ public class SwerveModule {
         drive_controller.setFF(0.0);
 
         drive_motor.setInverted(false);
-        angle_motor.setInverted(false);
+        angle_motor.setInverted(true);
         drive_motor.burnFlash();
         angle_motor.burnFlash();
 
@@ -82,8 +83,8 @@ public class SwerveModule {
 
     public void setDesiredState(SwerveModuleState state, boolean loop){ //the driving method.
         state = SwerveModuleState.optimize(state, getModuleAngle()); //minimizes travel time. If the robot is at 359 degrees, and needs to rotate to 0, its not going to rotate -359 degrees, but 1 degrees.
-        setSpeed(state, loop);
-        setAngle(state);
+        //setSpeed(state, loop);
+        setAngle(state, loop);
     }
 
     public void setSpeed(SwerveModuleState state, boolean isOpenLoop){
@@ -98,11 +99,21 @@ public class SwerveModule {
   
     }
 
-    public void setAngle(SwerveModuleState state){ 
-        Rotation2d angle = state.angle; //kPositions takes in amount of rotations
-        angle_controller.setReference(angle.getDegrees(), ControlType.kPosition);
+    public void setAngle(SwerveModuleState state, boolean isOpenLoop){
+         /* 
+        double angle = state.angle.getDegrees(); //kPositions takes in amount of rotations
+        if (Math.abs(state.speedMetersPerSecond) <= (Constants.SwerveConstants.maxVelocityPerSecond * 0.01)){
+             angle = lastAngle;
+        }
+
+        System.out.println(Rotation2d.fromDegrees(state.angle.getDegrees()));
+        */
+        angle_controller.setReference(180, ControlType.kPosition);
+        //lastAngle = angle;
+        //angle_motor.set(0.1);
          //we're moving based off angular position, hence the control type
          //getRotationsFromDegree(angle);
+        
          
      } 
 

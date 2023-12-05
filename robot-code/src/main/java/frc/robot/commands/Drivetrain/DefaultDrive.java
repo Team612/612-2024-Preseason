@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands.Drivetrain;
+import java.util.ResourceBundle.Control;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.controls.ControlMap;
@@ -29,8 +31,11 @@ public class DefaultDrive extends CommandBase {
   @Override
   public void execute() {
     // m_drivetrain.FieldOrientedDrive(-ControlMap.driver.getRawAxis(1), ControlMap.driver.getRawAxis(0), ControlMap.driver.getRawAxis(4));
-    m_swerve.drive(-ControlMap.driver_joystick.getRawAxis(1), ControlMap.driver_joystick.getRawAxis(0), ControlMap.driver_joystick.getRawAxis(4));
+    m_swerve.drive(-ControlMap.driver_joystick.getRawAxis(1), ControlMap.driver_joystick.getRawAxis(0), ControlMap.driver_joystick.getDirectionDegrees());
+    System.out.println(ControlMap.driver_joystick.getDirectionDegrees());
+    //ControlMap.driver_joystick.getRawAxis(4);
     //m_drivetrain.driveMecanum(0.5, -0.5, -0.5, 0.5);
+    
   }
 
   // Called once the command ends or is interrupted.

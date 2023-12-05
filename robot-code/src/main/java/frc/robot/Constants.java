@@ -127,7 +127,7 @@ public final class Constants {
     public static final double distancePerPulse = gearRatio/ ((Math.PI * diameter)); //distance per pulse
     public static final int voltageLimits = 12; //temp values, figure out later
     //pid.. use pid tuner
-    public static final double kP = 0;
+    public static final double kP = 0.01;
     public static final double kI = 0;
     public static final double kD = 0;
     //theta values
@@ -137,8 +137,8 @@ public final class Constants {
     public static final double kV = 0;
     public static final double kA = 0;
     //Swerve Constraints
-    public static final double maxVelocityPerSecond = 1;
-    public static final double maxAngularVelocityPerSecond = 1;
+    public static final double maxVelocityPerSecond = 20;
+    public static final double maxAngularVelocityPerSecond = 11.5;
 
     public static final SwerveDriveKinematics swerve_kinemtics = new SwerveDriveKinematics(
       new Translation2d(wheel_distance[0],wheel_distance[1]),

@@ -51,7 +51,6 @@ public class PoseEstimator extends SubsystemBase {
 
   public PoseEstimator() {
     s_swerve = Swerve.getInstance();
-    m_Vision = Vision.getVisionInstance();
     m_field = new Field2d();
     SmartDashboard.putData("Field", m_field);
 
@@ -64,7 +63,7 @@ public class PoseEstimator extends SubsystemBase {
       stateStdDevs,
       visionMeasurementStdDevs
     );
-    m_PhotonPoseEstimator = m_Vision.getVisionPose();
+    //m_PhotonPoseEstimator = m_Vision.getVisionPose();
   }
 
   public static PoseEstimator getPoseEstimatorInstance() {

@@ -27,6 +27,7 @@ public class ShuffleBoardButtons {
     GenericEntry Rotations;
     GenericEntry AbsoluteRotations;
     GenericEntry fodState;
+    GenericEntry moduleangle;
     // GenericEntry grabberCurrentGraph;
     GenericEntry telescopeCurrentGraph;
     GenericEntry BoreEncoders;
@@ -75,6 +76,7 @@ public class ShuffleBoardButtons {
         PoseEstimatorAngle = m_debugTab.add("PoseEstimator Angle", 0.0).getEntry();
         PoseEstimatorX = m_debugTab.add("PoseEstimator X", 0.0).getEntry();
         PoseEstimatorY = m_debugTab.add("PoseEstimator Y", 0.0).getEntry();
+        moduleangle = m_debugTab.add("Module 1 angle",0.0).getEntry();
         Rotations = m_debugTab.add("Raw Rotations",0.0).getEntry();
         AbsoluteRotations = m_debugTab.add("Absolute Rotations",0.0).getEntry();
         isBlueAlliance = m_debugTab.add("isBlueAlliance", false).getEntry();
@@ -123,6 +125,7 @@ public class ShuffleBoardButtons {
 
         
         NavxAngle.setDouble(m_swerve.getNavxAngle().getDegrees());
+        moduleangle.setDouble(m_swerve.getModule1Angle());
         PoseEstimatorAngle.setDouble(estimator.getRotation().getDegrees());
         PoseEstimatorX.setDouble(estimator.getX());
         PoseEstimatorY.setDouble(estimator.getY());

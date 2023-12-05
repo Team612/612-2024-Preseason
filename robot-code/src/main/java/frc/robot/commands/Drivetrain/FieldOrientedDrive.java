@@ -5,6 +5,7 @@
 package frc.robot.commands.Drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.controls.ControlMap;
 import frc.robot.subsystems.Swerve;
 
@@ -28,7 +29,7 @@ public class FieldOrientedDrive extends CommandBase {
   @Override
   public void execute() {
     //m_drivetrain.FieldOrientedDrive(-ControlMap.driver_joystick.getRawAxis(1), ControlMap.driver_joystick.getRawAxis(0), ControlMap.driver_joystick.getRawAxis(4));
-    m_swerve.drive(-ControlMap.driver_joystick.getRawAxis(1), ControlMap.driver_joystick.getRawAxis(0), ControlMap.driver_joystick.getRawAxis(4));
+    m_swerve.drive(-ControlMap.driver_joystick.getRawAxis(1), ControlMap.driver_joystick.getRawAxis(0), ControlMap.driver_joystick.getRawAxis(4) * Constants.SwerveConstants.maxAngularVelocityPerSecond);
 
   }
 

@@ -121,6 +121,10 @@ public class Swerve extends SubsystemBase {
     return navx.getVelocityY();
   }
 
+  public double getModule1Angle(){
+    return SwerveModules[0].getModuleAngle().getDegrees();
+  }
+
   public PoseEstimator getPoseEstimator(){
     return poseEstimator;
   }
@@ -128,10 +132,11 @@ public class Swerve extends SubsystemBase {
   public void setNavxAngleOffset(Rotation2d offset){
     navx.setAngleAdjustment(offset.getDegrees());
   }
-
+/* 
   public Rotation2d getEstimatedRobotRotations(){
     return poseEstimator.getCurrentPose().getRotation();
   }
+  */
 
   public Rotation2d getModularRawRotations(int num){
     return SwerveModules[num].getRawRotations();

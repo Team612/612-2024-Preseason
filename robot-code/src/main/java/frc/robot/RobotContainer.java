@@ -51,7 +51,7 @@ public class RobotContainer {
   //Subsystems
   
   private final FieldOrientedDrive m_FieldOrientedDrive = new FieldOrientedDrive(m_swerve);
-  public final Vision m_Vision = Vision.getVisionInstance();
+  //public final Vision m_Vision = Vision.getVisionInstance();
 
 
 
@@ -135,14 +135,6 @@ public class RobotContainer {
   }
 
   public void TeleopHeading(){
-    Rotation2d finalHeading = new Rotation2d(Units.degreesToRadians(-180));
-    Rotation2d currentHeading = m_swerve.getEstimatedRobotRotations();
-    Rotation2d deltaHeading = finalHeading.minus(currentHeading);
-    if(Robot.initAllianceColor == Alliance.Blue){
-    m_swerve.setNavxAngleOffset(deltaHeading.plus(new Rotation2d(Units.degreesToRadians(180))));}
-    
-    if(Robot.initAllianceColor == Alliance.Red){
-      m_swerve.setNavxAngleOffset(deltaHeading.plus(new Rotation2d(Units.degreesToRadians(0))));}
   }
   
   public Command getAutonomousCommand() {
