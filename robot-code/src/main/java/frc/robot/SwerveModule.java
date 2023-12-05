@@ -29,7 +29,7 @@ public class SwerveModule {
     private final CANCoder module_encoder; //this will be used as more of an accurate measurement compared to the built in Encoder
     private RelativeEncoder integrated_angle_encoder; //this will be used to actually adjust the position
     private int moduleNumber;
-    private double lastAngle;
+    private Rotation2d lastAngle;
     //private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(null,null , null);  //used to calculate speeds with desire velocity and acceleration
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.SwerveConstants.kS,
      Constants.SwerveConstants.kV,
@@ -42,14 +42,17 @@ public class SwerveModule {
         module_encoder = new CANCoder(port_encoder); //encoder for the module
         integrated_angle_encoder = angle_motor.getEncoder(); //integrated encoder for the angle motor
         module_position = new SwerveModulePosition(); //keeps track of the modules angle and meters traveled
+        lastAngle = getModuleAngle();
+    
 
         //creates PID controllers
         angle_controller = angle_motor.getPIDController();
         drive_controller = drive_motor.getPIDController();
-        configureController();
+        configure();
     }
 
-    public void configureController(){
+
+    public void configure(){
         //TEMPORARY VALUES!!
         angle_controller.setP(Constants.SwerveConstants.kP);
         angle_controller.setI(Constants.SwerveConstants.kI);
@@ -60,6 +63,10 @@ public class SwerveModule {
         drive_controller.setI(Constants.SwerveConstants.kI);
         drive_controller.setD(Constants.SwerveConstants.kD);
         drive_controller.setFF(0.0);
+
+        drive_motor.setSmartCurrentLimit(Constants.SwerveConstants.voltageLimits);
+        angle_motor.setSmartCurrentLimit(Constants.SwerveConstants.voltageLimits);
+        integrated_angle_encoder.setInverted(true);
 
         drive_motor.setInverted(false);
         angle_motor.setInverted(true);
@@ -72,9 +79,7 @@ public class SwerveModule {
         //integrated_angle_encoder.setPositionConversionFactor(Constants.SwerveConstants.angleConversionFactor); //degrees per pulse
         drive_motor.getEncoder().setPositionConversionFactor(Constants.SwerveConstants.distancePerPulse);
         drive_motor.getEncoder().setVelocityConversionFactor(Constants.SwerveConstants.distancePerPulse / 60); //rps
-        drive_motor.setSmartCurrentLimit(Constants.SwerveConstants.voltageLimits);
-        angle_motor.setSmartCurrentLimit(Constants.SwerveConstants.voltageLimits);
-        integrated_angle_encoder.setInverted(false);
+
         
         //saves settings
 
@@ -100,15 +105,17 @@ public class SwerveModule {
     }
 
     public void setAngle(SwerveModuleState state, boolean isOpenLoop){
-         /* 
-        double angle = state.angle.getDegrees(); //kPositions takes in amount of rotations
+         //if we are recieving continous input from the driver/controller. Anything that is not specific
+            //angle_motor.set(0.1); //.set is a percentage of speed, from -1 to 1
+         
+        /* 
+        Rotation2d angle = state.angle; //kPositions takes in amount of rotations
         if (Math.abs(state.speedMetersPerSecond) <= (Constants.SwerveConstants.maxVelocityPerSecond * 0.01)){
              angle = lastAngle;
         }
-
-        System.out.println(Rotation2d.fromDegrees(state.angle.getDegrees()));
         */
-        angle_controller.setReference(180, ControlType.kPosition);
+       // System.out.println(Rotation2d.fromDegrees(angle.getDegrees()));
+        angle_controller.setReference(-1.0, ControlType.kPosition);
         //lastAngle = angle;
         //angle_motor.set(0.1);
          //we're moving based off angular position, hence the control type
@@ -119,6 +126,7 @@ public class SwerveModule {
 
      public void resetToAbsolute(){
         integrated_angle_encoder.setPosition(0);
+        
         //module_encoder.setPosition(0);
      }
     

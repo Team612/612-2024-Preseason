@@ -137,7 +137,7 @@ public final class Constants {
     public static final double kV = 0;
     public static final double kA = 0;
     //Swerve Constraints
-    public static final double maxVelocityPerSecond = 20;
+    public static final double maxVelocityPerSecond = 4;
     public static final double maxAngularVelocityPerSecond = 11.5;
 
     public static final SwerveDriveKinematics swerve_kinemtics = new SwerveDriveKinematics(
