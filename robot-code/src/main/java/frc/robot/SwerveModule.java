@@ -10,6 +10,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
+import frc.robot.subsystems.Swerve;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -25,15 +27,18 @@ public class SwerveModule {
     private final CANSparkMax angle_motor;
     private SparkMaxPIDController angle_controller;
     private SparkMaxPIDController drive_controller;
+    private SimpleMotorFeedforward driveFeedForward;
+    private PIDController angleFeedForward;
     private SwerveModulePosition module_position;
     private final CANCoder module_encoder; //this will be used as more of an accurate measurement compared to the built in Encoder
     private RelativeEncoder integrated_angle_encoder; //this will be used to actually adjust the position
     private int moduleNumber;
     private Rotation2d lastAngle;
     //private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(null,null , null);  //used to calculate speeds with desire velocity and acceleration
-    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.SwerveConstants.kS,
-     Constants.SwerveConstants.kV,
-      Constants.SwerveConstants.kA); 
+
+    
+
+    
 
     public SwerveModule(int n, int port_motor,int port_angle, int port_encoder){
         moduleNumber = n;
@@ -43,6 +48,17 @@ public class SwerveModule {
         integrated_angle_encoder = angle_motor.getEncoder(); //integrated encoder for the angle motor
         module_position = new SwerveModulePosition(); //keeps track of the modules angle and meters traveled
         lastAngle = getModuleAngle();
+
+        //creates feedW
+        driveFeedForward = new SimpleMotorFeedforward(Constants.SwerveConstants.kS,
+        Constants.SwerveConstants.kV,
+         Constants.SwerveConstants.kA); 
+
+         angleFeedForward = new PIDController(Constants.SwerveConstants.kP,
+          Constants.SwerveConstants.kI, 
+          Constants.SwerveConstants.kD);
+
+
     
 
         //creates PID controllers
@@ -98,7 +114,7 @@ public class SwerveModule {
         drive_motor.set(velocity); //.set is a percentage of speed, from -1 to 1
         }
         else { //gradual acceleration for autonomous things
-            drive_controller.setReference(state.speedMetersPerSecond,ControlType.kVelocity,0, feedforward.calculate(state.speedMetersPerSecond)); 
+            drive_controller.setReference(state.speedMetersPerSecond,ControlType.kVelocity,0, driveFeedForward.calculate(state.speedMetersPerSecond)); 
 
         } 
   
@@ -115,11 +131,26 @@ public class SwerveModule {
         }
         */
        // System.out.println(Rotation2d.fromDegrees(angle.getDegrees()));
-        angle_controller.setReference(-1.0, ControlType.kPosition);
+        //angle_motor.setVoltage(moduleNumber);
+        
+        //radians because the position values should be in a circle
+        double desiredRadians = state.angle.getRadians(); //if doesnt work, just directly pass in something
+        double currentRadians = getModuleAngle().getRadians();
+        double velocity = angleFeedForward.calculate(currentRadians, desiredRadians);
+        angle_motor.set(velocity);
+        //angle_controller.setReference(-1.0, ControlType.kPosition);
         //lastAngle = angle;
         //angle_motor.set(0.1);
          //we're moving based off angular position, hence the control type
          //getRotationsFromDegree(angle);
+
+
+
+
+        
+
+         
+
         
          
      } 
@@ -170,4 +201,4 @@ public class SwerveModule {
     public int getModuleNumber(){
         return moduleNumber;
     }
-}
+} //https://github.com/FRC5190/2023OffseasonSwerve/commit/eac7dc00e4a52ce7d46dda6db236fba0fe8c7cdc#diff-1432cb0f5b8ee7c0c2911293c77c0fb676a0fd7cffe2f7a41e30348d29c05d29
