@@ -44,7 +44,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void drive(
-      Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+      Translation2d translation, double rotation, boolean isOpenLoop) {
 //     SwerveModuleState[] swerveModuleStates =
 //         Constants.Swerve.swerveKinematics.toSwerveModuleStates(
 //             fieldRelative

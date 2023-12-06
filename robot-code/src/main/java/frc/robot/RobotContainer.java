@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.EncoderConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DefaultDrive;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
@@ -30,12 +29,13 @@ import edu.wpi.first.wpilibj2.command.ProxyCommand;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-import frc.robot.controls.ControlMap;
 import frc.robot.subsystems.Drivetrain;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drivetrain m_drivetrain = new Drivetrain();
+
+  private final Joystick driver = new Joystick(0);
 
   /* Drive Controls */
   private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -44,9 +44,9 @@ public class RobotContainer {
 
   /* Driver Buttons */
   private final JoystickButton zeroGyro =
-      new JoystickButton(ControlMap.driver_joystick, XboxController.Button.kY.value);
-  private final JoystickButton robotCentric =
-      new JoystickButton(ControlMap.driver_joystick, XboxController.Button.kLeftBumper.value);
+      new JoystickButton(driver, XboxController.Button.kY.value);
+  // private final JoystickButton robotCentric =
+  //     new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
   //Drive subsystems declarations 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -101,10 +101,9 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(
         new DefaultDrive(
             m_drivetrain,
-            () -> -ControlMap.driver_joystick.getRawAxis(translationAxis),
-            () -> -ControlMap.driver_joystick.getRawAxis(strafeAxis),
-            () -> -ControlMap.driver_joystick.getRawAxis(rotationAxis),
-            () -> robotCentric.getAsBoolean()));
+            () -> -driver.getRawAxis(translationAxis),
+            () -> -driver.getRawAxis(strafeAxis),
+            () -> -driver.getRawAxis(rotationAxis)));
   }
 
   public void TeleopHeading(){

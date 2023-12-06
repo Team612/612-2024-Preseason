@@ -6,9 +6,12 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.SwerveLib.CANCoderUtil;
@@ -33,8 +36,11 @@ public class SwerveModule {
   private final SparkMaxPIDController driveController;
   private final SparkMaxPIDController angleController;
 
+  private final PIDController regController = 
+    new PIDController(Constants.Swerve.angleKP, Constants.Swerve.angleKI, Constants.Swerve.angleKD);
+
   private final SimpleMotorFeedforward feedforward =
-      new SimpleMotorFeedforward(
+    new SimpleMotorFeedforward(
           Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
@@ -132,9 +138,21 @@ public class SwerveModule {
         (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
             ? lastAngle
             : desiredState.angle;
-
+    
     angleController.setReference(angle.getDegrees(), ControlType.kPosition);
     lastAngle = angle;
+
+    // double turnAngleError = Math.abs(angle.getDegrees() - integratedAngleEncoder.getPosition());
+
+    // double pidOut = regController.calculate(integratedAngleEncoder.getPosition(), angle.getDegrees());
+    // // if robot is not moving, stop the turn motor oscillating
+    // if (turnAngleError < Constants.Swerve.stickDeadband
+    //     && Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
+    //   pidOut = 0;
+
+    // angleMotor.setVoltage(pidOut * RobotController.getBatteryVoltage());
+
+    // angleMotor.set(pidOut);
   }
 
   private Rotation2d getAngle() {
