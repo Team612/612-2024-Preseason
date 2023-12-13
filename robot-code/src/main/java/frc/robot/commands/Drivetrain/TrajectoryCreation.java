@@ -10,6 +10,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,7 +22,6 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import frc.robot.ShuffleBoardButtons;
 import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.Vision;
 
 public class TrajectoryCreation {
 
@@ -105,25 +105,23 @@ public class TrajectoryCreation {
         );
     }
 
-    public PathPlannerTrajectory onthefly(PoseEstimator estimator, Vision vision, double y_translation){
+    public PathPlannerTrajectory onthefly(PoseEstimator estimator, Limelight vision, double y_translation){
         Pose2d estimatedPose = estimator.getCurrentPose();
-
+        vision.switchPipline(2); //EDIT THIS VALUE FOR APRILTAGS!!!!!!!
         double x = estimatedPose.getX();
         double y = estimatedPose.getY();
         Rotation2d angle = estimatedPose.getRotation();
        
-        PhotonPipelineResult result = vision.getCamera().getLatestResult();
+        double result = vision.getFiducialId(); //apriltag
         int id;
         double tagX = 0;
         double tagY = 0; 
 
-        if(result.hasTargets()){
-            id = vision.getCamera().getLatestResult().getBestTarget().getFiducialId();
+        if(result != -1) {//has tag
+            id = vision.getFiducialId();
 
-
-            Pose2d tagPose = vision.return_tag_pose(id).toPose2d();
-            tagX = tagPose.getX();
-            tagY = tagPose.getY();
+            tagX = vision.getTx();
+            tagY = vision.getTy();
         }
         else{
             id = -1;

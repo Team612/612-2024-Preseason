@@ -9,11 +9,11 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 
 public class RunOnTheFly extends CommandBase {
-  private final Vision m_vision;
+  private final Limelight m_Limelight;
   private final PoseEstimator poseEstimatorSystem;
   private final Swerve m_swerve;
   private final boolean resetOdom;
@@ -23,14 +23,14 @@ public class RunOnTheFly extends CommandBase {
   private CommandBase controllerCommand = Commands.none();
 
   /** Creates a new RunOnTheFly. */
-  public RunOnTheFly(Swerve s, PoseEstimator p, boolean r, TrajectoryCreation traj, Vision v, 
+  public RunOnTheFly(Swerve s, PoseEstimator p, boolean r, TrajectoryCreation traj, Limelight v, 
                     double y) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_swerve = s;
     poseEstimatorSystem = p;
     resetOdom = r;
     m_traj = traj;
-    m_vision = v;
+    m_Limelight = v;
     translation = y;
 
     addRequirements(s, v, p);
@@ -39,7 +39,7 @@ public class RunOnTheFly extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    PathPlannerTrajectory path = m_traj.onthefly(m_swerve.getPoseEstimator(), m_vision, translation);
+    PathPlannerTrajectory path = m_traj.onthefly(m_swerve.getPoseEstimator(), m_Limelight, translation);
 
     if(resetOdom){
       m_swerve.resetPoseEstimator();

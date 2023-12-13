@@ -20,7 +20,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Drivetrain.DefaultDrive;
 import frc.robot.commands.Drivetrain.TrajectoryCreation;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Vision;
 import frc.robot.commands.Drivetrain.RunOnTheFly;
 import frc.robot.subsystems.PoseEstimator;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;

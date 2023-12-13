@@ -31,7 +31,7 @@ public class PoseEstimator extends SubsystemBase {
   /** Creates a new PoseEstimator. */
   SwerveDrivePoseEstimator m_SwervePoseEstimator;
   PhotonPoseEstimator m_PhotonPoseEstimator;
-  Vision m_Vision;
+  Limelight m_Vision;
   Swerve s_swerve;
   private Field2d m_field;
 
@@ -85,41 +85,7 @@ public class PoseEstimator extends SubsystemBase {
     }
 
     m_SwervePoseEstimator.update(s_swerve.getNavxAngle(), s_swerve.getModulePosition());
-    if(m_PhotonPoseEstimator != null){
-      m_PhotonPoseEstimator.update().ifPresent(estimatedRobotPose -> {
-      var estimatedPose = estimatedRobotPose.estimatedPose;
-
-      // Make sure we have a new measurement, and that it's on the field
-      if (estimatedRobotPose.timestampSeconds != previousPipelineTimestamp && 
-      estimatedPose.getX() > 0.0 && estimatedPose.getX() <= FIELD_LENGTH_METERS
-      && estimatedPose.getY() > 0.0 && estimatedPose.getY() <= FIELD_WIDTH_METERS) {
-
-        if (estimatedRobotPose.targetsUsed.size() > 1 && estimatedPose.getX() < 4) {
-
-          for (PhotonTrackedTarget target : estimatedRobotPose.targetsUsed) {
-
-            Pose3d targetPose = m_Vision.return_tag_pose(target.getFiducialId());
-            Transform3d bestTarget = target.getBestCameraToTarget();
-            Pose3d camPose = targetPose.transformBy(bestTarget.inverse());            
-            double distance = Math.hypot(bestTarget.getX(), bestTarget.getY());
-
-            //checking from the camera to the tag is less than 4
-            if (distance < 4 && target.getPoseAmbiguity() <= .2) {
-              previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
-              m_SwervePoseEstimator.addVisionMeasurement(camPose.toPose2d(), estimatedRobotPose.timestampSeconds);
-            }
-          }
-        } 
-
-        else {
-            previousPipelineTimestamp = estimatedRobotPose.timestampSeconds;
-            m_SwervePoseEstimator.addVisionMeasurement(estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
-        }
-      }
-      });
-    }
     m_field.setRobotPose(getCurrentPose());
-    m_SwervePoseEstimator.update(s_swerve.getNavxAngle(), s_swerve.getModulePosition());
   }
 
 
