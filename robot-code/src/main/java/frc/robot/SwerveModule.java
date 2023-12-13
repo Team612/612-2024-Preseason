@@ -132,11 +132,11 @@ public class SwerveModule {
         */
        // System.out.println(Rotation2d.fromDegrees(angle.getDegrees()));
         //angle_motor.setVoltage(moduleNumber);
-        
+
         //radians because the position values should be in a circle
         double desiredRadians = state.angle.getRadians(); //if doesnt work, just directly pass in something
         double currentRadians = getModuleAngle().getRadians();
-        double velocity = angleFeedForward.calculate(currentRadians, desiredRadians);
+        double velocity = (angleFeedForward.calculate(currentRadians, desiredRadians));
         angle_motor.set(velocity);
         //angle_controller.setReference(-1.0, ControlType.kPosition);
         //lastAngle = angle;
@@ -178,7 +178,7 @@ public class SwerveModule {
         return Rotation2d.fromRotations(integrated_angle_encoder.getPosition());
      }
      public Rotation2d getAbsoluteRotations(){ 
-        return Rotation2d.fromRotations((integrated_angle_encoder.getPosition() % Constants.SwerveConstants.gearRatio)/ Constants.SwerveConstants.gearRatio);
+        return Rotation2d.fromRotations((integrated_angle_encoder.getPosition() % Constants.SwerveConstants.driveGearRatio)/ Constants.SwerveConstants.driveGearRatio);
      }
 
 

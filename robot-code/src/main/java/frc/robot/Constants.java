@@ -121,10 +121,11 @@ public final class Constants {
   public static class SwerveConstants {
     public static final double SwerveMaxSpeed = 5.0;//5 meters a second
     public static final double[] wheel_distance = {Units.inchesToMeters(9.117),Units.inchesToMeters(9.298)};
-    public static final double gearRatio = 8.14;
+    public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
+    public static final double angleGearRatio = (150.0 / 7.0); // 12.8:1
     public static final double diameter = 4;
-    public static final double angleConversionFactor = (gearRatio/1.0) / 360; //degree per pulse
-    public static final double distancePerPulse = gearRatio/ ((Math.PI * diameter)); //distance per pulse
+    public static final double angleConversionFactor = 360/angleGearRatio; //degree per pulse
+    public static final double distancePerPulse = driveGearRatio/ ((Math.PI * diameter)); //distance per pulse
     public static final int voltageLimits = 12; //temp values, figure out later
     //pid.. use pid tuner
     public static final double kP = 0.01;
