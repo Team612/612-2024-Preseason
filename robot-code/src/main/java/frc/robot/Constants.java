@@ -4,16 +4,20 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.Quaternion;
 import com.pathplanner.lib.PathConstraints;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -36,6 +40,10 @@ public final class Constants {
     public static final double wheelBase = Units.inchesToMeters(18.234);
     public static final double wheelDiameter = Units.inchesToMeters(4.0);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
+    public static final double kMaxVelocityMetersPerSecond = 20;
+    public static final double kMaxAccelerationMetersPerSecondSq = 5;
+
+    public static final Alliance alliance = Alliance.Blue;
 
     public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
     public static final double angleGearRatio = (150.0 / 7.0); // 12.8:1
@@ -46,6 +54,8 @@ public final class Constants {
             new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
             new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
             new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0));
+
+ 
 
     /* Swerve Voltage Compensation */
     public static final double voltageComp = 12.0;
@@ -71,6 +81,8 @@ public final class Constants {
     public static final double driveKV = 2.44;
     public static final double driveKA = 0.27;
 
+    /*Autonomous Characterization Values */
+    public static final double kPTheta = 0;
     /* Drive Motor Conversion Factors */
     public static final double driveConversionPositionFactor =
         (wheelDiameter * Math.PI) / driveGearRatio;
@@ -139,8 +151,14 @@ public final class Constants {
       public static final SwerveModuleConstants constants =
           new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
     }
-  }
+  
 
+
+    
+
+
+
+  }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static int kGunnerControllerPort = 1;
@@ -148,6 +166,7 @@ public final class Constants {
 
   public static class VisionConstants{
     public static String cameraName = "Microsoft_LifeCam_HD-3000";
+    
 
     //constraints
     public static final TrapezoidProfile.Constraints ThetaControllerConstraints = 

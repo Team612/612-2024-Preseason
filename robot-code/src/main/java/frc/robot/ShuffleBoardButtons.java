@@ -2,23 +2,36 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot;
+import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.PoseEstimator;
+import frc.robot.subsystems.Limelight;
+
 public class ShuffleBoardButtons {
     ShuffleboardTab m_driverTab;
     ShuffleboardTab m_encoderTab;
     ShuffleboardTab m_graphTab;
     ShuffleboardTab m_debugTab;
     ShuffleboardTab m_limitSwitchTab;
+    ShuffleboardTab m_smShuffleboardTab;
     
     GenericEntry NavxAngle;
     GenericEntry PoseEstimatorAngle;
     GenericEntry PoseEstimatorX;
     GenericEntry PoseEstimatorY;
+    GenericEntry Rotations;
+    GenericEntry AbsoluteRotations;
     GenericEntry fodState;
+    GenericEntry moduleangle;
+    GenericEntry hasTarget;
+    GenericEntry tX;
+    GenericEntry tY;
     // GenericEntry grabberCurrentGraph;
     GenericEntry telescopeCurrentGraph;
     GenericEntry BoreEncoders;
@@ -32,9 +45,6 @@ public class ShuffleBoardButtons {
     GenericEntry telescopeLimitSwitch;
 
     GenericEntry isBlueAlliance;
-
-    public static GenericEntry toggleAlliance;
-    
 
     //accessable entires
     public static GenericEntry grabberSpikeTresh;
@@ -51,6 +61,9 @@ public class ShuffleBoardButtons {
     public static GenericEntry humanStation; //telescope debug 
     public static GenericEntry ground;
 
+    public static GenericEntry toggleMittens;
+
+
     
 
     public void initButtons(){
@@ -59,7 +72,7 @@ public class ShuffleBoardButtons {
         m_graphTab = Shuffleboard.getTab("Graphs");
         m_debugTab = Shuffleboard.getTab("Debug Tab");
         m_limitSwitchTab = Shuffleboard.getTab("Limit Switch Tab");
-        
+        m_smShuffleboardTab = Shuffleboard.getTab("SmartDashboard");
 
         //debug entries
 
@@ -67,6 +80,12 @@ public class ShuffleBoardButtons {
         PoseEstimatorAngle = m_debugTab.add("PoseEstimator Angle", 0.0).getEntry();
         PoseEstimatorX = m_debugTab.add("PoseEstimator X", 0.0).getEntry();
         PoseEstimatorY = m_debugTab.add("PoseEstimator Y", 0.0).getEntry();
+        hasTarget = m_debugTab.add("Has target", false).getEntry();
+        tX = m_debugTab.add("tX", 0.0).getEntry();
+        tY = m_debugTab.add("tY", 0.0).getEntry();
+        moduleangle = m_debugTab.add("Module 1 angle",0.0).getEntry();
+        Rotations = m_debugTab.add("Raw Rotations",0.0).getEntry();
+        AbsoluteRotations = m_debugTab.add("Absolute Rotations",0.0).getEntry();
         isBlueAlliance = m_debugTab.add("isBlueAlliance", false).getEntry();
 
 
@@ -101,7 +120,27 @@ public class ShuffleBoardButtons {
         pivotBLS = m_limitSwitchTab.add("pivotLimitSwitchState", false).getEntry();
 
         telescopeLimitSwitch = m_limitSwitchTab.add("telescopeLimitSwitch", false).getEntry();
-        toggleAlliance = m_driverTab.add("Is Red Alliance?",false).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+
+        // toggleMittens = m_smShuffleboardTab.add("isMittens?", true).withWidget(BuiltInWidgets.kToggleButton).getEntry();
+    }
+
+    public void updateButtons(){
+        PoseEstimator poseEstimator = PoseEstimator.getPoseEstimatorInstance();
+        Pose2d estimator = poseEstimator.getCurrentPose();
+        Drivetrain m_swerve = Drivetrain.getInstance();
+        Limelight m_limelight = Limelight.getInstance();
+
+        hasTarget.setBoolean(m_limelight.getTv());
+        tX.setDouble(m_limelight.getTx());
+        tY.setDouble(m_limelight.getTy());
+        NavxAngle.setDouble(m_swerve.getNavxAngle().getDegrees());
+        moduleangle.setDouble(m_swerve.getModuleAngle(1).getDegrees());
+        PoseEstimatorAngle.setDouble(estimator.getRotation().getDegrees());
+        PoseEstimatorX.setDouble(estimator.getX());
+        PoseEstimatorY.setDouble(estimator.getY());
+        Rotations.setDouble(m_swerve.getModularRawRotations(0).getRotations());
+        AbsoluteRotations.setDouble(m_swerve.getModularAbsoluteRotations(0).getRotations()); //module 0, fl
+        
     }
     
 }

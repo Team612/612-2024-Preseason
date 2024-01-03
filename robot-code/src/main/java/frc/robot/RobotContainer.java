@@ -33,7 +33,7 @@ import frc.robot.subsystems.Drivetrain;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Drivetrain m_drivetrain = new Drivetrain();
+  private final Drivetrain m_drivetrain = Drivetrain.getInstance();
 
   private final Joystick driver = new Joystick(0);
 

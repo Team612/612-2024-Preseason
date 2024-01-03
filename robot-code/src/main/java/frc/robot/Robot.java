@@ -4,7 +4,15 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.server.PathPlannerServer;
+
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.SwerveLib.CTREConfigs;
@@ -19,6 +27,25 @@ public class Robot extends TimedRobot {
   public static CTREConfigs ctreConfigs;
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  private final ShuffleBoardButtons m_BoardButtons = new ShuffleBoardButtons();
+
+  UsbCamera driver_cam_1;
+  UsbCamera driver_cam_2;
+
+  //Driverstation always sends out a red alliance which is weird so we wait until something is different
+  public static Alliance initAllianceColor = Alliance.Invalid;
+
+  private void checkDSUpdate() {
+    Alliance currentAlliance = DriverStation.getAlliance();
+    // If we have data, and have a new alliance from last time
+    if (DriverStation.isDSAttached() && currentAlliance != Constants.Swerve.alliance) {
+      initAllianceColor = currentAlliance;
+      
+    }
+  }
+
+
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -27,6 +54,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     ctreConfigs = new CTREConfigs();
+    m_BoardButtons.initButtons();
+    checkDSUpdate();
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -45,6 +75,7 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    m_BoardButtons.updateButtons();
     CommandScheduler.getInstance().run();
   }
 

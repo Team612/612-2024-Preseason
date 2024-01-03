@@ -10,6 +10,7 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
@@ -35,6 +36,7 @@ public class SwerveModule {
 
   private final SparkMaxPIDController driveController;
   private final SparkMaxPIDController angleController;
+  private SwerveModulePosition module_position;
 
   private final PIDController regController = 
     new PIDController(Constants.Swerve.angleKP, Constants.Swerve.angleKI, Constants.Swerve.angleKD);
@@ -46,6 +48,7 @@ public class SwerveModule {
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
     angleOffset = moduleConstants.angleOffset;
+    module_position = new SwerveModulePosition();
 
     /* Angle Encoder Config */
     angleEncoder = new CANCoder(moduleConstants.cancoderID);
@@ -75,7 +78,7 @@ public class SwerveModule {
     setSpeed(desiredState, isOpenLoop);
   }
 
-  private void resetToAbsolute() {
+  public void resetToAbsolute() {
     double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
     integratedAngleEncoder.setPosition(absolutePosition);
   }
@@ -155,7 +158,7 @@ public class SwerveModule {
     // angleMotor.set(pidOut);
   }
 
-  private Rotation2d getAngle() {
+  public Rotation2d getAngle() {
     return Rotation2d.fromDegrees(integratedAngleEncoder.getPosition());
   }
 
@@ -166,4 +169,26 @@ public class SwerveModule {
   public SwerveModuleState getState() {
     return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
   }
+
+
+
+
+    
+ 
+
+ public Rotation2d getRawRotations(){
+    return Rotation2d.fromRotations(integratedAngleEncoder.getPosition());
+ }
+ public Rotation2d getAbsoluteRotations(){ 
+    return Rotation2d.fromRotations((integratedAngleEncoder.getPosition() % Constants.Swerve.driveGearRatio)/ Constants.Swerve.driveGearRatio);
+ }
+ public SwerveModulePosition getPositionObject(){
+  return module_position;
+}
+
+
+
+public int getModuleNumber(){
+    return moduleNumber;
+}
 }
